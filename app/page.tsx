@@ -1,4 +1,4 @@
-
+"use client"
 import { useState, useEffect } from "react"
 import { Header } from "@/components/header"
 import { SocialNotifications } from "@/components/social-notifications"
