@@ -13,7 +13,7 @@ const _geistMono = Geist_Mono({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
   title: "TiendaTexas | Viral Products & Trending Finds in Hot Springs, Arkansas, Texas",
-  description: "Encuentra equipos de gimnasio, suplementos y accesorios de alta calidad con envíos rápidos y pagos seguros.",
+  description: "The internet’s favorite viral products, delivered fast with secure checkout at TiendaTexas.",
   generator: "Bucaramarketing",
   icons: {
     icon: [
