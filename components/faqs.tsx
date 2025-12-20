@@ -1,0 +1,64 @@
+"use client"
+
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion"
+
+const faqs = [
+  {
+    question: "📦 How does delivery work?",
+    answer:
+      "We offer personal delivery in Arkansas. Once your order is confirmed, we coordinate directly with you to deliver your Labubu or thermos safely to your doorstep.",
+  },
+  {
+    question: "🚚 How long does delivery take?",
+    answer:
+      "Delivery usually takes 24 to 48 hours, depending on your location in Arkansas. We always confirm the exact time after payment.",
+  },
+  {
+    question: "📍 Do you deliver outside Arkansas?",
+    answer:
+      "At the moment, personal delivery is only available in Arkansas. If you’re outside the state, contact us first to check availability.",
+  },
+  {
+    question: "🧃 What type of thermos are included?",
+    answer:
+      "The combo includes 2 high-quality thermos, ideal for daily use at school, work, or travel.",
+  },
+  {
+    question: "📲 How do I confirm my order?",
+    answer:
+      "Place your order Pay securely with PayPal We contact you to schedule delivery",
+  },
+]
+
+export function FAQs() {
+  return (
+    <section id="faqs" className="py-12">
+      <div className="container mx-auto px-4 text-center">
+        <div className="flex items-center justify-center mb-8">
+          <img src="/interrogacion.png" alt="Preguntas Frecuentes" className="h-20 w-15 mr-4" />
+          <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-balance text-left">
+            FREQUENTLY <br />
+            <span className="text-[#FF8A00] font-black">ASKED QUESTIONS</span>
+          </h2>
+        </div>
+        <div className="max-w-3xl mx-auto">
+          <Accordion type="single" collapsible className="w-full">
+            {faqs.map((faq, index) => (
+              <AccordionItem key={index} value={`item-${index}`}>
+                <AccordionTrigger className="text-lg text-left">{faq.question}</AccordionTrigger>
+                <AccordionContent className="text-base text-left text-muted-foreground">
+                  {faq.answer}
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        </div>
+      </div>
+    </section>
+  )
+}
