@@ -1,12 +1,22 @@
+"use client"
+
 import { ProductCard } from "@/components/product-card"
 import type { Product } from "@/lib/store"
+import { useAnalytics } from "@/hooks/use-analytics"
+import { useCart } from "@/context/cart-context"
 
 interface ProductsProps {
   products: Product[]
-  onAddToCart: (product: Product) => void
 }
 
-export function Products({ products, onAddToCart }: ProductsProps) {
+export function Products({ products }: ProductsProps) {
+  const { trackEvent } = useAnalytics()
+  const { addToCart } = useCart()
+
+  const handleAddToCart = (product: Product) => {
+    trackEvent("add_to_cart", { productId: product.id, productName: product.name })
+    addToCart(product)
+  }
   return (
     <section id="products" className="py-1">
       <div className="container">
@@ -22,7 +32,7 @@ export function Products({ products, onAddToCart }: ProductsProps) {
         </div>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {products.map((product) => (
-            <ProductCard key={product.id} product={product} onAddToCart={onAddToCart} />
+            <ProductCard key={product.id} product={product} onAddToCart={handleAddToCart} />
           ))}
         </div>
       </div>

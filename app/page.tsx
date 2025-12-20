@@ -1,5 +1,3 @@
-"use client"
-import { useState, useEffect } from "react"
 import { Header } from "@/components/header"
 import { SocialNotifications } from "@/components/social-notifications"
 import { Hero } from "@/components/hero"
@@ -11,32 +9,18 @@ import { Footer } from "@/components/footer"
 import { ResultsCarousel } from "@/components/results-carousel"
 import { FAQs } from "@/components/faqs"
 import { DeliveryInfo } from "@/components/delivery-info"
-import { useAnalytics } from "@/hooks/use-analytics"
-import { productsStorage, type Product } from "@/lib/store"
-import { useCart } from "@/context/cart-context"
+import { defaultProducts } from "@/lib/store"
 import { SmartCTA } from "@/components/smart-cta"
 import { AITestimonials } from "@/components/ai-testimonials"
 
 export default function HomePage() {
-  const [products, setProducts] = useState<Product[]>([])
-  const { trackEvent } = useAnalytics()
-  const { addToCart } = useCart()
-
-  useEffect(() => {
-    setProducts(productsStorage.get())
-  }, [])
-
-  const handleAddToCart = (product: Product) => {
-    trackEvent("add_to_cart", { productId: product.id, productName: product.name })
-    addToCart(product)
-  }
-
   return (
     <div className="min-h-screen max-w-7xl mx-auto px-4 md:px-0 text-center">
       <Header />
       <SocialNotifications />
       <Hero />
       <OrderProcess />
+
       <div className="flex items-center justify-center gap-4 font-sans text-center pt-4">
         <span className="text-red-600 font-bold text-xs line-through">
           was 80$
@@ -50,14 +34,17 @@ export default function HomePage() {
           50% discount – Don't miss the opportunity!
         </span>
       </div>
+
       <AlternatingContent />
-      <Products products={products} onAddToCart={handleAddToCart} />
+      <Products products={defaultProducts} />
       <ResultsCarousel />
       <AITestimonials />
+
       <div className="md:grid md:grid-cols-2 md:gap-8">
         <DeliveryInfo />
         <FAQs />
       </div>
+
       <OrderProcess />
       <Footer />
       <SmartCTA />
