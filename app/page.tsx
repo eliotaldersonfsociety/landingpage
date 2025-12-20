@@ -15,7 +15,6 @@ import { DeliveryInfo } from "@/components/delivery-info"
 import { useAnalytics } from "@/hooks/use-analytics"
 import { productsStorage, type Product } from "@/lib/store"
 import { useCart } from "@/context/cart-context"
-import { BehaviorTracker } from "@/components/behavior-tracker"
 import { SmartCTA } from "@/components/smart-cta"
 import { AITestimonials } from "@/components/ai-testimonials"
 
@@ -35,7 +34,6 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen max-w-7xl mx-auto px-4 md:px-0 text-center">
-      <BehaviorTracker />
       <Header />
       <SocialNotifications />
       <Hero />

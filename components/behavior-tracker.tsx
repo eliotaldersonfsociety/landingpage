@@ -28,7 +28,7 @@ export function BehaviorTracker() {
 
     const flush = () => {
       const now = Date.now()
-      if (now - lastSend.current < 5000) return
+      if (now - lastSend.current < 10000) return // Increased to 10 seconds
 
       if (buffer.current.length === 0) return
 
@@ -46,16 +46,19 @@ export function BehaviorTracker() {
     }
 
     const tick = () => {
-      buffer.current.push({
-        scroll: lastScroll.current,
-        clicks: clicks.current,
-        time: Date.now() - startTime.current,
-      })
+      // Only add to buffer if there's activity
+      if (lastScroll.current > 0 || clicks.current > 0) {
+        buffer.current.push({
+          scroll: lastScroll.current,
+          clicks: clicks.current,
+          time: Date.now() - startTime.current,
+        })
+      }
 
       flush()
     }
 
-    const interval = setInterval(tick, 2000)
+    const interval = setInterval(tick, 5000) // Increased to 5 seconds
 
     window.addEventListener("scroll", onScroll, { passive: true })
     document.addEventListener("click", onClick)
