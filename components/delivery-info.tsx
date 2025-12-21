@@ -12,7 +12,7 @@ export function DeliveryInfo() {
         <div className="relative w-full max-w-lg mx-auto h-64 rounded-lg overflow-hidden shadow-lg">
           {/* I'll use an example image, you can change it for a more suitable one */}
           <Image
-            src="/8.png" // Replace with a delivery image or USA map if you have
+            src="/8.webp" // Replace with a delivery image or USA map if you have
             alt="Fast Delivery in USA"
             fill
             className="object-contain"

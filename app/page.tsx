@@ -1,26 +1,26 @@
-import { Header } from "@/components/header"
-import { SocialNotifications } from "@/components/social-notifications"
+import { Header } from "@/components/header/header"
+import { SocialNotificationsWrapper } from "@/components/social-notifications-wrapper"
 import { Hero } from "@/components/hero"
-import { AlternatingContent } from "@/components/alternating-content"
+import AlternatingContents from "@/components/alternativecontent/page"
 import { OrderProcess } from "@/components/order-process"
 import { Products } from "@/components/products"
 import { Testimonials } from "@/components/testimonials"
 import { Footer } from "@/components/footer"
-import { ResultsCarousel } from "@/components/results-carousel"
-import { FAQs } from "@/components/faqs"
+import { ResultsCarouselClient } from "@/components/result-carrousel/results-carousel.client"
+import { FAQs } from "@/components/faqs/faqs"
 import { DeliveryInfo } from "@/components/delivery-info"
-import { defaultProducts } from "@/lib/store"
+import { defaultProducts, type Product } from "@/lib/store"
 import { SmartCTA } from "@/components/smart-cta"
 import { AITestimonials } from "@/components/ai-testimonials"
 
 export default function HomePage() {
+
   return (
     <div className="min-h-screen max-w-7xl mx-auto px-4 md:px-0 text-center">
       <Header />
-      <SocialNotifications />
+      <SocialNotificationsWrapper />
       <Hero />
       <OrderProcess />
-
       <div className="flex items-center justify-center gap-4 font-sans text-center pt-4">
         <span className="text-red-600 font-bold text-xs line-through">
           was 80$
@@ -34,17 +34,14 @@ export default function HomePage() {
           50% discount – Don't miss the opportunity!
         </span>
       </div>
-
-      <AlternatingContent />
+      <AlternatingContents />
       <Products products={defaultProducts} />
-      <ResultsCarousel />
+      <ResultsCarouselClient />
       <AITestimonials />
-
       <div className="md:grid md:grid-cols-2 md:gap-8">
         <DeliveryInfo />
         <FAQs />
       </div>
-
       <OrderProcess />
       <Footer />
       <SmartCTA />

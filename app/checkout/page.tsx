@@ -7,7 +7,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { OrderConfirmation } from "@/components/order-confirmation"
 import { createOrderAction, createOrderItemsAction } from "@/lib/actions/orders"
 import { cartStorage, CartItem } from "@/lib/store"
-import { Header } from "@/components/header"
+import { Header } from "@/components/header/header"
 import { Footer } from "@/components/footer"
 
 declare global {

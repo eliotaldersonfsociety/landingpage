@@ -62,7 +62,7 @@ export const defaultProducts: Product[] = [
     name: "Labubu Monster Bundle",
     description: "Get 1 adorable Labubu monster collectible + 2 stylish water bottles for only $40! Perfect for collectors and hydration lovers.",
     price: 40,
-    image: "/1.jpeg",
+    image: "/1.webp",
     category: "Collectibles",
   },
 ]

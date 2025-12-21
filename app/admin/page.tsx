@@ -46,7 +46,7 @@ import {
   type SiteContent,
 } from "@/lib/store"
 import { getAllOrdersAction, updateOrderStatusAction } from "@/lib/actions/orders"
-import { Header } from "@/components/header"
+import { Header } from "@/components/header/header"
 import { Footer } from "@/components/footer"
 import { jwtDecode } from "jwt-decode"
 import { PredictiveHeatmap } from "@/components/predictive-heatmap"
