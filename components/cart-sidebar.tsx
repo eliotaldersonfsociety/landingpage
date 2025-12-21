@@ -78,21 +78,21 @@ export function CartSidebar({
       <SheetContent className="w-full sm:max-w-lg overflow-y-auto p-4">
         <SheetHeader>
           <SheetTitle className="flex items-center justify-between">
-            <span>Carrito</span>
+            <span>Cart</span>
             {cart.length > 0 && (
               <Button variant="ghost" size="sm" onClick={onClear}>
-                Vaciar Carrito
+                Empty Cart
               </Button>
             )}
           </SheetTitle>
-          <p className="text-sm text-muted-foreground text-left">Revisa tus artículos y procede al pago seguro.</p>
+          <p className="text-sm text-muted-foreground text-left">Review your items and proceed to secure payment.</p>
         </SheetHeader>
 
         {cart.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-[50vh] text-center">
             <ShoppingCart className="h-16 w-16 text-muted-foreground mb-4" />
-            <p className="text-lg font-medium">Tu carrito está vacío</p>
-            <p className="text-sm text-muted-foreground">Añade algunos productos para empezar</p>
+            <p className="text-lg font-medium">Your cart is empty</p>
+            <p className="text-sm text-muted-foreground">Add some products to get started</p>
           </div>
         ) : (
           <div className="mt-8 space-y-4">
@@ -134,20 +134,20 @@ export function CartSidebar({
               </div>
             ))}
 
-            {/* Recomendaciones Personalizadas */}
+            {/* Personalized Recommendations */}
             {cart.length > 0 && (
               <div className="border-t pt-4">
                 <PersonalizedRecommendations />
               </div>
             )}
 
-            {/* Sección de cupón */}
+            {/* Coupon section */}
             <div className="flex items-center gap-2 pt-4">
-              <Input placeholder="Ingresar código de cupón" className="flex-1" />
-              <Button className="bg-yellow-400 hover:bg-yellow-500 text-black">Aplicar</Button>
+              <Input placeholder="Enter coupon code" className="flex-1" />
+              <Button className="bg-yellow-400 hover:bg-yellow-500 text-black">Apply</Button>
             </div>
 
-            {/* Subtotal y Total */}
+            {/* Subtotal and Total */}
             <div className="pt-4 space-y-2">
               <div className="flex items-center justify-between text-sm">
                 <span>Subtotal:</span>
@@ -159,7 +159,7 @@ export function CartSidebar({
               </div>
             </div>
 
-            {/* Aceptar Términos */}
+            {/* Accept Terms */}
             <Card className="p-4 mt-4">
               <CardContent className="p-0">
                 <div className="flex items-center space-x-2">
@@ -172,18 +172,18 @@ export function CartSidebar({
                     htmlFor="terms"
                     className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-left"
                   >
-                    Aceptar Términos (Requerido)
+                    Accept Terms (Required)
                     <a href="#" className="text-blue-500 hover:underline ml-1">
-                      Puedes leer nuestros términos y condiciones haciendo clic aquí.
+                      You can read our terms and conditions by clicking here.
                     </a>
                   </label>
                 </div>
               </CardContent>
             </Card>
 
-            {/* Botón de pago */}
+            {/* Payment Button */}
             <Button className="w-full bg-orange-500 hover:bg-orange-600" size="lg" disabled={!termsAccepted} onClick={handleCheckout}>
-              Pagar ${total.toFixed(2)}
+              Pay ${total.toFixed(2)}
             </Button>
 
           </div>
