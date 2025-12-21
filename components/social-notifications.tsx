@@ -5,10 +5,10 @@ import { ShoppingCart } from "lucide-react"
 import * as tf from "@tensorflow/tfjs"
 
 const messageTemplates = [
-  (n: number) => `${n} personas están viendo esto`,
-  (n: number) => `${n} personas han comprado en los últimos 10 minutos`,
-  (n: number) => `${n} personas agregaron un producto al carrito`,
-  (n: number) => `${n} personas están comprando ahora`
+  (n: number) => `${n} people are viewing this`,
+  (n: number) => `${n} people have purchased in the last 10 minutes`,
+  (n: number) => `${n} people added a product to the cart`,
+  (n: number) => `${n} people are buying now`
 ]
 
 const rand = (min: number, max: number) =>
@@ -85,7 +85,7 @@ export function SocialNotifications() {
       const prediction = model.predict(input) as tf.Tensor
       const prob = (await prediction.data())[0]
 
-      // 🔥 ML + heurística
+      // 🔥 ML + heuristics
       const intent =
         prob * 0.6 +
         lastScroll.current * 0.25 +

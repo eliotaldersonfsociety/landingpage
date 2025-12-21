@@ -6,67 +6,75 @@ type EventData = {
   scroll?: number
   time: number
   clicks?: number
+  ctaSeen?: number
+  converted?: number
 }
 
 export function BehaviorTracker() {
   const startTime = useRef(Date.now())
   const clicks = useRef(0)
   const lastScroll = useRef(0)
-  const buffer = useRef<Partial<EventData>[]>([])
-  const lastSend = useRef(0)
+
+  const sendData = (extra: { ctaSeen?: number, converted?: number } = {}) => {
+    const data: EventData = {
+      scroll: lastScroll.current,
+      time: Date.now() - startTime.current,
+      clicks: clicks.current,
+      ...extra
+    }
+
+    navigator.sendBeacon(
+      "/api/behavior",
+      JSON.stringify({ events: [data] })
+    )
+  }
 
   useEffect(() => {
     const onScroll = () => {
       lastScroll.current =
-        window.scrollY /
-        (document.body.scrollHeight - window.innerHeight)
+        window.scrollY / (document.body.scrollHeight - window.innerHeight)
     }
 
-    const onClick = () => {
+    const onClick = (e: Event) => {
       clicks.current++
-    }
 
-    const flush = () => {
-      const now = Date.now()
-      if (now - lastSend.current < 10000) return // Increased to 10 seconds
+      const target = e.target as HTMLElement
 
-      if (buffer.current.length === 0) return
-
-      const payload = {
-        events: buffer.current,
+      // 🔹 Agregar al carrito
+      if (
+        target.closest("button, a") &&
+        (target.textContent?.toLowerCase().includes("agregar al carrito") ||
+          target.closest('[data-action="add-to-cart"]'))
+      ) {
+        sendData({ ctaSeen: 1 })
       }
 
-      navigator.sendBeacon(
-        "/api/behavior",
-        JSON.stringify(payload)
-      )
-
-      buffer.current = []
-      lastSend.current = now
-    }
-
-    const tick = () => {
-      // Only add to buffer if there's activity
-      if (lastScroll.current > 0 || clicks.current > 0) {
-        buffer.current.push({
-          scroll: lastScroll.current,
-          clicks: clicks.current,
-          time: Date.now() - startTime.current,
-        })
+      // 🔹 Checkout
+      if (
+        target.closest("button, a") &&
+        (target.getAttribute("href") === "/checkout" ||
+          target.textContent?.toLowerCase().includes("checkout") ||
+          target.closest('[data-action="checkout"]'))
+      ) {
+        sendData({ converted: 1 })
       }
-
-      flush()
     }
 
-    const interval = setInterval(tick, 5000) // Increased to 5 seconds
+    // 🔹 Video play
+    const onVideoPlay = (e: Event) => {
+      if ((e.target as HTMLElement).tagName === "VIDEO") {
+        sendData()
+      }
+    }
 
     window.addEventListener("scroll", onScroll, { passive: true })
     document.addEventListener("click", onClick)
+    document.addEventListener("play", onVideoPlay, true)
 
     return () => {
-      clearInterval(interval)
       window.removeEventListener("scroll", onScroll)
       document.removeEventListener("click", onClick)
+      document.removeEventListener("play", onVideoPlay, true)
     }
   }, [])
 

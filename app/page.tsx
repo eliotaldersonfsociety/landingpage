@@ -10,7 +10,6 @@ import { ResultsCarouselClient } from "@/components/result-carrousel/results-car
 import { FAQs } from "@/components/faqs/faqs"
 import { DeliveryInfo } from "@/components/delivery-info"
 import { defaultProducts, type Product } from "@/lib/store"
-import { SmartCTA } from "@/components/smart-cta"
 import { AITestimonials } from "@/components/ai-testimonials"
 
 export default function HomePage() {
@@ -44,7 +43,6 @@ export default function HomePage() {
       </div>
       <OrderProcess />
       <Footer />
-      <SmartCTA />
     </div>
   )
 }
