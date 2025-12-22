@@ -7,48 +7,38 @@ type MessageConfig = {
   max: number
   message: string
   cta?: string
-  color: string
 }
 
 const MESSAGES: MessageConfig[] = [
   {
     min: 0.4,
     max: 0.55,
-    message: "👀 Otras personas están viendo este producto ahora mismo",
-    color: "bg-zinc-800",
+    message: "Some people are viewing this product right now",
   },
   {
     min: 0.55,
-    max: 0.65,
-    message: "⭐ Producto viral · Muy bien calificado hoy",
-    color: "bg-indigo-600",
+    max: 0.7,
+    message: "This product has sold multiple times today",
   },
   {
-    min: 0.65,
-    max: 0.75,
-    message: "🔥 Quedan pocas unidades disponibles",
-    cta: "Agregar al carrito",
-    color: "bg-orange-600",
-  },
-  {
-    min: 0.75,
+    min: 0.7,
     max: 0.85,
-    message: "🚨 Alta demanda · Podría agotarse hoy",
-    cta: "Agregar ahora",
-    color: "bg-red-600",
+    message: "Limited stock for today's deliveries",
   },
   {
     min: 0.85,
     max: 1,
-    message: "⏰ Última unidad disponible · Compra antes que otro",
-    cta: "Comprar ahora",
-    color: "bg-red-700",
+    message: "Only a few units left",
   },
 ]
 
 export function UrgencyNotification() {
   const [score, setScore] = useState<number | null>(null)
+  const [visible, setVisible] = useState(false)
 
+  /* ===============================
+     READ SCORE
+  =============================== */
   useEffect(() => {
     const i = setInterval(() => {
       const s = (window as any).__conversionScore
@@ -58,7 +48,24 @@ export function UrgencyNotification() {
     return () => clearInterval(i)
   }, [])
 
-  if (!score || score < 0.4) return null
+  /* ===============================
+     VISIBILITY CYCLE (REPTIL MODE)
+  =============================== */
+  useEffect(() => {
+    if (!score || score < 0.4) return
+
+    setVisible(true)
+
+    const hide = setTimeout(() => setVisible(false), 7000)
+    const show = setTimeout(() => setVisible(true), 26000)
+
+    return () => {
+      clearTimeout(hide)
+      clearTimeout(show)
+    }
+  }, [score])
+
+  if (!score || score < 0.4 || !visible) return null
 
   const config = MESSAGES.find(
     m => score >= m.min && score < m.max
@@ -68,11 +75,19 @@ export function UrgencyNotification() {
 
   return (
     <div
-      className={`fixed bottom-4 right-4 z-50 max-w-xs text-white p-4 rounded-2xl shadow-2xl transition-all animate-in slide-in-from-bottom ${config.color}`}
+      className="
+        fixed bottom-5 right-5 z-40 max-w-xs
+        bg-white/90 backdrop-blur-md
+        text-zinc-900
+        px-4 py-3
+        rounded-xl
+        shadow-md
+        border border-zinc-200
+        text-sm
+        animate-[fadeIn_0.6s_ease-out]
+      "
     >
-      <p className="text-sm font-semibold leading-snug mb-3">
-        {config.message}
-      </p>
+      <p className="leading-snug">{config.message}</p>
 
       {config.cta && (
         <button
@@ -83,7 +98,14 @@ export function UrgencyNotification() {
                 new MouseEvent("click", { bubbles: true })
               )
           }}
-          className="w-full bg-white text-black rounded-xl py-2 text-sm font-bold hover:scale-[1.02] transition"
+          className="
+            mt-2
+            text-sm font-medium
+            text-zinc-900
+            underline underline-offset-4
+            opacity-80 hover:opacity-100
+            transition
+          "
         >
           {config.cta}
         </button>

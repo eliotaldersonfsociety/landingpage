@@ -81,7 +81,7 @@ export default function DashboardPage() {
       <main className="flex-1 py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto space-y-8">
         <div className="text-center">
-          <h1 className="text-4xl font-bold text-white">My <span className="text-orange-500">Dashboard</span></h1>
+          <h1 className="text-4xl font-bold text-foreground">My <span className="text-orange-500">Dashboard</span></h1>
           <p className="mt-2 text-lg text-gray-600">Welcome back, {currentUser?.name || currentUser?.email}</p>
         </div>
 

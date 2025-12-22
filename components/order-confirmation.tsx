@@ -33,17 +33,17 @@ export function OrderConfirmation({ items }: OrderConfirmationProps) {
     <Card className="w-full max-w-2xl text-center">
       <CardHeader className="flex flex-col items-center">
         <CheckCircle className="h-16 w-16 text-green-500 mb-4" />
-        <CardTitle className="text-3xl font-bold">¡Compra Completada!</CardTitle>
+        <CardTitle className="text-3xl font-bold">Purchase Completed!</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <p className="text-lg text-muted-foreground">
-          Tu pedido ha sido procesado exitosamente. En unos minutos, recibirás un correo electrónico con la confirmación de tu compra y los detalles de tu pedido.
+          Your order has been processed successfully. In a few minutes, you will receive an email with the confirmation of your purchase and the details of your order.
         </p>
         <p className="text-sm text-blue-500">
-          Serás redirigido a tu dashboard en {countdown} segundos...
+          You will be redirected to your dashboard in {countdown} seconds...
         </p>
         <div className="space-y-2 text-left">
-          <h3 className="text-xl font-semibold">Resumen de tu Pedido:</h3>
+          <h3 className="text-xl font-semibold">Order Summary:</h3>
           <div className="border rounded-md p-4 space-y-2">
             {items.map((item, index) => (
               <div key={index} className="flex justify-between">
@@ -64,7 +64,7 @@ export function OrderConfirmation({ items }: OrderConfirmationProps) {
           </div>
         </div>
         <p className="text-sm text-muted-foreground">
-          Gracias por tu compra. Si tienes alguna pregunta, no dudes en contactarnos.
+          Thank you for your purchase. If you have any questions, feel free to contact us.
         </p>
       </CardContent>
     </Card>

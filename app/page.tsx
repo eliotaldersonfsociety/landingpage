@@ -34,7 +34,7 @@ export default function HomePage() {
         </span>
       </div>
       <AlternatingContents />
-      <Products products={defaultProducts} />
+      <Products products={defaultProducts.slice(0, 1)} />
       <ResultsCarouselClient />
       <AITestimonials />
       <div className="md:grid md:grid-cols-2 md:gap-8">

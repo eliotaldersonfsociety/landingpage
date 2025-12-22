@@ -75,27 +75,44 @@ export function HeaderAuthClient() {
       </div>
 
       {/* MOBILE */}
-      <Sheet>
-        <SheetTrigger asChild>
-          <Button variant="ghost" size="icon">
-            <Menu className="h-5 w-5" />
+      {isLoggedIn ? (
+        <div className="flex gap-2">
+          <Button variant="ghost" size="icon" className="bg-green-500 text-white rounded-full font-bold" asChild>
+            <Link href="/dashboard" title="Dashboard" className="flex items-center justify-center">
+              {userInitial}
+            </Link>
           </Button>
-        </SheetTrigger>
-        <SheetContent side="right">
-          <SheetHeader>
-            <SheetTitle>Menu</SheetTitle>
-          </SheetHeader>
-          <nav className="flex flex-col gap-4 mt-6">
-            <Link href="/">Home</Link>
-            <Link href="#products">Products</Link>
-            {isLoggedIn ? (
-              <Link href="/dashboard">Dashboard</Link>
-            ) : (
-              <Link href="/login">Login</Link>
-            )}
-          </nav>
-        </SheetContent>
-      </Sheet>
+          <Button variant="ghost" size="icon" onClick={handleLogout} title="Logout">
+            <LogOut className="h-4 w-4" />
+          </Button>
+        </div>
+      ) : (
+        <div suppressHydrationWarning>
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon">
+                <Menu className="h-5 w-5" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="right">
+              <SheetHeader>
+                <SheetTitle>Menu</SheetTitle>
+              </SheetHeader>
+              <nav className="flex flex-col gap-4 mt-6">
+                <Link href="/" className="flex items-center gap-2">
+                  Home
+                </Link>
+                <Link href="#products" className="flex items-center gap-2">
+                  Products
+                </Link>
+                <Link href="/login" className="flex items-center gap-2">
+                  Login
+                </Link>
+              </nav>
+            </SheetContent>
+          </Sheet>
+        </div>
+      )}
     </>
   )
 }

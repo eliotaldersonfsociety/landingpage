@@ -65,6 +65,22 @@ export const defaultProducts: Product[] = [
     image: "/1.webp",
     category: "Collectibles",
   },
+  {
+    id: "2",
+    name: "Stylish Thermos Bottle",
+    description: "Keep your drinks hot or cold with this insulated thermos bottle. Perfect companion for the Labubu collectible.",
+    price: 15,
+    image: "/3.webp",
+    category: "Bottles",
+  },
+  {
+    id: "3",
+    name: "Labubu Monster Collectible",
+    description: "Beutiful Labubu monster collectible. Perfect for fans and collectors.",
+    price: 20,
+    image: "/2.webp",
+    category: "Labubu",
+  },
 ]
 
 // Default site content

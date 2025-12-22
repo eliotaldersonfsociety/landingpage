@@ -13,7 +13,7 @@ type EventData = {
 }
 
 const STORAGE_KEY = "behavior-events"
-const MIN_EVENTS_TO_TRAIN = 8
+const MIN_EVENTS_TO_TRAIN = 6
 
 export function BehaviorTracker({
   baseModelUrl = "/model/model.json",
@@ -25,7 +25,7 @@ export function BehaviorTracker({
   const lastScroll = useRef(0)
   const modelRef = useRef<tf.LayersModel | null>(null)
 
-  /* ---------- INIT LOCALFORAGE ---------- */
+  /* ---------- INIT STORAGE ---------- */
   useEffect(() => {
     localforage.config({
       name: "behavior-ai",
@@ -33,7 +33,7 @@ export function BehaviorTracker({
     })
   }, [])
 
-  /* ---------- TRAIN MODEL ---------- */
+  /* ---------- TRAIN ---------- */
   const trainIncremental = async (events: EventData[]) => {
     if (!modelRef.current || events.length < 2) return
 
@@ -48,7 +48,7 @@ export function BehaviorTracker({
     const ys = tf.tensor2d(events.map(e => [e.converted]))
 
     await modelRef.current.fit(xs, ys, {
-      epochs: 3,
+      epochs: 4,
       batchSize: 4,
       shuffle: true,
     })
@@ -59,7 +59,7 @@ export function BehaviorTracker({
     await modelRef.current.save("indexeddb://behavior-model")
     await localforage.removeItem(STORAGE_KEY)
 
-    console.log("🧠 Entrenado con", events.length, "eventos")
+    console.log("🧠 Modelo entrenado con", events.length, "eventos")
   }
 
   /* ---------- SCORE ---------- */
@@ -81,7 +81,7 @@ export function BehaviorTracker({
     ;(window as any).__conversionScore = score
   }
 
-  /* ---------- HANDLE EVENT ---------- */
+  /* ---------- SAVE EVENT ---------- */
   const handleEvent = async (
     extra: Partial<Pick<EventData, "ctaSeen" | "converted">> = {}
   ) => {
@@ -113,11 +113,17 @@ export function BehaviorTracker({
         modelRef.current = await tf.loadLayersModel(
           "indexeddb://behavior-model"
         )
-        console.log("Modelo desde IndexedDB")
+        console.log("🧠 Modelo cargado desde IndexedDB")
       } catch {
         modelRef.current = await tf.loadLayersModel(baseModelUrl)
         await modelRef.current.save("indexeddb://behavior-model")
-        console.log("Modelo base cargado")
+        console.log("🧠 Modelo base cargado")
+      }
+      if (modelRef.current) {
+        modelRef.current.compile({
+          optimizer: 'adam',
+          loss: 'meanSquaredError'
+        })
       }
     }
     load()
@@ -129,6 +135,7 @@ export function BehaviorTracker({
       lastScroll.current =
         window.scrollY /
         (document.body.scrollHeight - window.innerHeight)
+      predictScore()
     }
 
     const onClick = (e: Event) => {

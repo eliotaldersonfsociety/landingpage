@@ -148,3 +148,13 @@
   }
 }
 
+@keyframes softPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.015); }
+}
+
+[data-action="add-to-cart"] {
+  animation: softPulse 6s ease-in-out infinite;
+}
+
+

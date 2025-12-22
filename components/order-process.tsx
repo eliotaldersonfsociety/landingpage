@@ -13,7 +13,7 @@ export function OrderProcess() {
     <div className="flex items-center justify-center gap-8 py-2">
       {steps.map((step, index) => (
         <div key={index} className={`flex flex-col items-center gap-2 relative ${index >= 3 ? 'hidden md:flex' : ''}`}>
-          <div className="flex items-center justify-center w-16 h-16 rounded-full text-white">
+          <div className="flex items-center justify-center w-16 h-16 rounded-full bg-black text-white dark:bg-white dark:text-black">
             <step.icon className="w-8 h-8" />
           </div>
           <span className="text-sm font-medium text-center">{step.label}</span>
