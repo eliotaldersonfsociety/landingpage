@@ -1,19 +1,23 @@
-import type React from "react"
+import type { ReactNode } from "react"
 import type { Metadata } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
+
 import { ThemeProvider } from "@/components/theme-provider"
 import { CartProvider } from "@/context/cart-context"
 import { Toaster } from "@/components/ui/toaster"
 import { BehaviorTracker } from "@/components/behavior-tracker"
+import { UrgencyNotification } from "@/components/UrgencyNotification"
+
 import "./globals.css"
 
-const _geist = Geist({ subsets: ["latin"] })
-const _geistMono = Geist_Mono({ subsets: ["latin"] })
+const geist = Geist({ subsets: ["latin"] })
+const geistMono = Geist_Mono({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
   title: "TiendaTexas | Viral Products & Trending Finds in Hot Springs, Arkansas, Texas",
-  description: "The internet’s favorite viral products, delivered fast with secure checkout at TiendaTexas.",
+  description:
+    "The internet’s favorite viral products, delivered fast with secure checkout at TiendaTexas.",
   generator: "Bucaramarketing",
   icons: {
     icon: [
@@ -36,12 +40,14 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode
-}>) {
+}: {
+  children: ReactNode
+}) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className="font-sans antialiased">
+      <body
+        className={`${geist.className} ${geistMono.className} antialiased`}
+      >
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -50,10 +56,19 @@ export default function RootLayout({
         >
           <CartProvider>
             {children}
+
+            {/* UI global */}
             <Toaster />
+
+            {/* IA comportamiento */}
             <BehaviorTracker />
+
+            {/* Persuasión inteligente */}
+            <UrgencyNotification />
           </CartProvider>
         </ThemeProvider>
+
+        {/* Analytics */}
         <Analytics />
       </body>
     </html>
