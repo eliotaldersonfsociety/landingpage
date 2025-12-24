@@ -32,7 +32,7 @@ const testimonials = [
   }
 ]
 
-export function AITestimonials() {
+function AITestimonials() {
   const [currentTestimonial, setCurrentTestimonial] = useState(testimonials[0])
 
   useEffect(() => {
@@ -116,3 +116,5 @@ export function AITestimonials() {
     </Card>
   )
 }
+
+export default AITestimonials
