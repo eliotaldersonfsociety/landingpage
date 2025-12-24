@@ -84,7 +84,10 @@ export async function getCurrentUser(): Promise<{ id: number; email: string; rol
   try {
     const cookieStore = await cookies()
     const token = cookieStore.get('authToken')?.value
-    if (!token) return null
+    if (!token) {
+      console.log('No authToken cookie found')
+      return null
+    }
     const decoded = jwt.verify(token, process.env.JWT_SECRET!) as any
 
     // Fetch full user data from database
@@ -94,7 +97,10 @@ export async function getCurrentUser(): Promise<{ id: number; email: string; rol
       .where(eq(users.id, decoded.userId))
       .limit(1)
 
-    if (userResult.length === 0) return null
+    if (userResult.length === 0) {
+      console.log('User not found in database')
+      return null
+    }
 
     const user = userResult[0]
     return {
@@ -107,7 +113,8 @@ export async function getCurrentUser(): Promise<{ id: number; email: string; rol
       department: user.department || undefined,
       whatsappNumber: user.whatsappNumber || undefined,
     }
-  } catch {
+  } catch (error) {
+    console.error('getCurrentUser error:', error)
     return null
   }
 }
