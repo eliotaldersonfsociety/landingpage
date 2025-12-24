@@ -1,94 +1,112 @@
-import { NextRequest } from "next/server";
+import { NextRequest } from "next/server"
+import { db } from "@/lib/db"
+import { behavior } from "@/lib/schema"
+import { addEvent, getRecentEvents } from "@/lib/shared-events"
 
-// ⚠️ Requerido para SSE en Vercel
-export const runtime = "edge";
+// ─────────────────────────────────────────────
+// SSE CLIENTS
+let clients: ReadableStreamDefaultController[] = []
 
-// Lista de controladores de clientes SSE conectados
-let clients: ReadableStreamDefaultController[] = [];
-
-// 🔴 Endpoint para que el ADMIN se conecte (SSE)
-export async function GET() {
-  const stream = new ReadableStream({
-    start(controller) {
-      // Agregar cliente a la lista
-      clients.push(controller);
-
-      // Confirmar conexión
-      controller.enqueue(
-        `data: ${JSON.stringify({
-          type: "connected",
-          ts: Date.now(),
-        })}\n\n`
-      );
-    },
-    cancel(controller) {
-      // Eliminar cliente cuando se cierra la conexión
-      clients = clients.filter((c) => c !== controller);
-    },
-  });
-
-  return new Response(stream, {
-    headers: {
-      "Content-Type": "text/event-stream",
-      "Cache-Control": "no-cache",
-      Connection: "keep-alive",
-      "X-Accel-Buffering": "no", // Evita buffering en algunos proxies
-    },
-  });
+// ─────────────────────────────────────────────
+// IN-MEMORY AGGREGATE
+let aggregate = {
+  scrollSum: 0,
+  events: 0,
+  clicks: 0,
+  ctaSeen: 0,
+  converted: 0,
+  lastFlush: Date.now(),
+  dirty: false,
 }
 
-// 🟢 Endpoint para que el LANDING envíe eventos (POST)
+// ─────────────────────────────────────────────
+// GET: Behavior data or SSE
+export async function GET(req: NextRequest) {
+  const accept = req.headers.get("accept") || ""
+
+  if (accept.includes("text/event-stream")) {
+    // SSE stream
+    const stream = new ReadableStream({
+      start(controller) {
+        clients.push(controller)
+        controller.enqueue(`data: ${JSON.stringify({ type: "connected" })}\n\n`)
+      },
+      cancel(controller) {
+        clients = clients.filter(c => c !== controller)
+      },
+    })
+
+    return new Response(stream, {
+      headers: {
+        "Content-Type": "text/event-stream",
+        "Cache-Control": "no-cache",
+        Connection: "keep-alive",
+      },
+    })
+  } else {
+    // Return behavior data for testimonials
+    return Response.json(getRecentEvents())
+  }
+}
+
+// ─────────────────────────────────────────────
+// EVENTS (LANDING)
 export async function POST(req: NextRequest) {
+  let data
   try {
-    const data = await req.json();
+    data = await req.json()
+  } catch (e) {
+    console.error('Invalid JSON:', e)
+    return Response.json({ error: 'Invalid JSON' }, { status: 400 })
+  }
 
-    // Obtener país desde Cloudflare (gratis, sin llamadas externas)
-    let country = req.headers.get("cf-ipcountry")?.trim() || "XX";
+  // 1️⃣ Add to shared events for testimonials
+  addEvent(data)
 
-    // Mapeo de códigos de país a emojis de bandera
-    const flags: Record<string, string> = {
-      US: "🇺🇸",
-      CO: "🇨🇴",
-      MX: "🇲🇽",
-      ES: "🇪🇸",
-      AR: "🇦🇷",
-      BR: "🇧🇷",
-      CA: "🇨🇦",
-      FR: "🇫🇷",
-      DE: "🇩🇪",
-      IT: "🇮🇹",
-      GB: "🇬🇧",
-      NL: "🇳🇱",
-      AU: "🇦🇺",
-      JP: "🇯🇵",
-      KR: "🇰🇷",
-      RU: "🇷🇺",
-      IN: "🇮🇳",
-      // Agrega más si lo necesitas
-    };
+  // 2️⃣ Broadcast realtime
+  for (const client of clients) {
+    try {
+      client.enqueue(`data: ${JSON.stringify(data)}\n\n`)
+    } catch {
+      clients = clients.filter(c => c !== client)
+    }
+  }
 
-    const flag = flags[country] || "🌍";
+  // 3️⃣ Aggregate behavior
+  if (data.type === "behavior" || data.type === "click") {
+    aggregate.scrollSum += data.scroll ?? 0
+    aggregate.events++
+    aggregate.clicks += data.clicks ? 1 : 0
+    aggregate.ctaSeen += data.ctaSeen ?? 0
+    aggregate.converted += data.converted ?? 0
+    aggregate.dirty = true
+  }
 
-    // Construir payload final
-    const payload = {
-      ...data,
-      country: flag,
-      ts: Date.now(),
-    };
+  // 3️⃣ Flush each 24h ONLY if dirty
+  const ONE_DAY = 1000 * 60 * 60 * 24
+  const now = Date.now()
 
-    // Broadcast a todos los clientes SSE conectados
-    for (const client of clients) {
-      try {
-        client.enqueue(`data: ${JSON.stringify(payload)}\n\n`);
-      } catch (err) {
-        // Cliente desconectado o inválido — lo eliminamos silenciosamente
-        clients = clients.filter((c) => c !== client);
-      }
+  if (aggregate.dirty && now - aggregate.lastFlush > ONE_DAY) {
+    await db.insert(behavior).values({
+      scroll: aggregate.scrollSum / aggregate.events,
+      time: aggregate.events,
+      clicks: aggregate.clicks,
+      ctaSeen: aggregate.ctaSeen,
+      converted: aggregate.converted,
+    })
+
+    aggregate = {
+      scrollSum: 0,
+      events: 0,
+      clicks: 0,
+      ctaSeen: 0,
+      converted: 0,
+      lastFlush: now,
+      dirty: false,
     }
 
-    return Response.json({ ok: true });
-  } catch (error) {
-    // Manejo básico de errores (log opcional en producción)
-    return Response.json({ ok: false, error: "Invalid request" }, { status: 400 });
+    console.log("💾 Behavior guardado (24h flush)")
   }
+
+  return Response.json({ ok: true })
 }

@@ -1,3 +1,4 @@
+// app/layout.tsx
 import type { ReactNode } from "react"
 import type { Metadata } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
@@ -7,7 +8,7 @@ import { ThemeProvider } from "@/components/theme-provider"
 import { CartProvider } from "@/context/cart-context"
 import { Toaster } from "@/components/ui/toaster"
 import { UrgencyNotification } from "@/components/UrgencyNotification"
-
+import { LoadBehaviorAI } from "@/components/LoadBehaviorAI" // 👈 Añade esta línea
 
 import "./globals.css"
 
@@ -59,11 +60,12 @@ export default function RootLayout({
 
             {/* UI global */}
             <Toaster />
-
-            {/* Persuasión inteligente */}
             <UrgencyNotification />
           </CartProvider>
         </ThemeProvider>
+
+        {/* 🔥 Carga diferida de IA + tracking comportamental */}
+        <LoadBehaviorAI />
 
         {/* Analytics */}
         <Analytics />

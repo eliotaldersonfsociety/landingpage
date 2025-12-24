@@ -10,7 +10,6 @@ import { Footer } from "@/components/footer"
 import { FAQs } from "@/components/faqs/faqs"
 import { DeliveryInfo } from "@/components/delivery-info"
 import { defaultProducts, type Product } from "@/lib/store"
-import { BehaviorTracker } from "@/components/behavior-tracker"
 
 const ResultsCarouselClient = dynamic(() => import('@/components/result-carrousel/results-carousel.client'))
 const AITestimonials = dynamic(() => import('@/components/ai-testimonials'))
@@ -46,7 +45,6 @@ export default function HomePage() {
       </div>
       <OrderProcess />
       <Footer />
-      <BehaviorTracker />
     </div>
   )
 }

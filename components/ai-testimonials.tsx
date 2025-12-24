@@ -38,7 +38,7 @@ function AITestimonials() {
   useEffect(() => {
     async function selectTestimonial() {
       try {
-        const response = await fetch('/api/behavior')
+        const response = await fetch('/api/realtime')
         const behaviorData = await response.json()
 
         if (behaviorData.length > 2) {

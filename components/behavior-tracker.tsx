@@ -110,7 +110,8 @@ export function BehaviorTracker({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           type: 'behavior',
-          ...event
+          ...event,
+          ts: Date.now(),
         })
       })
     } catch (e) {
@@ -167,6 +168,7 @@ export function BehaviorTracker({
             clicks: clicks.current,
             ctaSeen: 0,
             converted: 0,
+            ts: Date.now(),
           })
         })
       } catch (e) {
@@ -208,6 +210,7 @@ export function BehaviorTracker({
             clicks: clicks.current,
             ctaSeen: eventType === 'add_to_cart' ? 1 : 0,
             converted: eventType === 'checkout' ? 1 : 0,
+            ts: Date.now(),
           })
         })
       } catch (e) {
