@@ -1,75 +1,94 @@
-import { NextRequest } from "next/server"
+import { NextRequest } from "next/server";
 
-export const runtime = "edge" // 👈 IMPORTANTE PARA SSE EN VERCEL
+// ⚠️ Requerido para SSE en Vercel
+export const runtime = "edge";
 
-let clients: ReadableStreamDefaultController[] = []
+// Lista de controladores de clientes SSE conectados
+let clients: ReadableStreamDefaultController[] = [];
 
-// 🔴 ADMIN SE CONECTA (SSE)
+// 🔴 Endpoint para que el ADMIN se conecte (SSE)
 export async function GET() {
   const stream = new ReadableStream({
     start(controller) {
-      clients.push(controller)
+      // Agregar cliente a la lista
+      clients.push(controller);
 
+      // Confirmar conexión
       controller.enqueue(
         `data: ${JSON.stringify({
           type: "connected",
           ts: Date.now(),
-        })}\n\n`,
-      )
+        })}\n\n`
+      );
     },
     cancel(controller) {
-      clients = clients.filter((c) => c !== controller)
+      // Eliminar cliente cuando se cierra la conexión
+      clients = clients.filter((c) => c !== controller);
     },
-  })
+  });
 
   return new Response(stream, {
     headers: {
       "Content-Type": "text/event-stream",
       "Cache-Control": "no-cache",
       Connection: "keep-alive",
+      "X-Accel-Buffering": "no", // Evita buffering en algunos proxies
     },
-  })
+  });
 }
 
-// 🟢 LANDING ENVÍA EVENTOS
+// 🟢 Endpoint para que el LANDING envíe eventos (POST)
 export async function POST(req: NextRequest) {
-  const data = await req.json()
+  try {
+    const data = await req.json();
 
-  // Get IP
-  const ip = req.headers.get('x-forwarded-for')?.split(',')[0] ||
-             req.headers.get('x-real-ip') ||
-             req.headers.get('cf-connecting-ip') ||
-             'unknown'
+    // Obtener país desde Cloudflare (gratis, sin llamadas externas)
+    let country = req.headers.get("cf-ipcountry")?.trim() || "XX";
 
-  let country = '🌍'
+    // Mapeo de códigos de país a emojis de bandera
+    const flags: Record<string, string> = {
+      US: "🇺🇸",
+      CO: "🇨🇴",
+      MX: "🇲🇽",
+      ES: "🇪🇸",
+      AR: "🇦🇷",
+      BR: "🇧🇷",
+      CA: "🇨🇦",
+      FR: "🇫🇷",
+      DE: "🇩🇪",
+      IT: "🇮🇹",
+      GB: "🇬🇧",
+      NL: "🇳🇱",
+      AU: "🇦🇺",
+      JP: "🇯🇵",
+      KR: "🇰🇷",
+      RU: "🇷🇺",
+      IN: "🇮🇳",
+      // Agrega más si lo necesitas
+    };
 
-  if (ip !== 'unknown') {
-    try {
-      const res = await fetch(`https://ipapi.co/${ip}/json/`, { cache: 'force-cache' })
-      if (res.ok) {
-        const geo = await res.json()
-        country = geo.country_code ? `🇺${geo.country_code.slice(1).toLowerCase()}` : '🌍'
-        // Wait, for US it's US, flag is 🇺🇸
-        const flags: Record<string, string> = {
-          US: '🇺🇸', CO: '🇨🇴', MX: '🇲🇽', ES: '🇪🇸', AR: '🇦🇷', BR: '🇧🇷', CA: '🇨🇦', FR: '🇫🇷', DE: '🇩🇪', IT: '🇮🇹'
-        }
-        country = flags[geo.country_code] || '🌍'
+    const flag = flags[country] || "🌍";
+
+    // Construir payload final
+    const payload = {
+      ...data,
+      country: flag,
+      ts: Date.now(),
+    };
+
+    // Broadcast a todos los clientes SSE conectados
+    for (const client of clients) {
+      try {
+        client.enqueue(`data: ${JSON.stringify(payload)}\n\n`);
+      } catch (err) {
+        // Cliente desconectado o inválido — lo eliminamos silenciosamente
+        clients = clients.filter((c) => c !== client);
       }
-    } catch {}
+    }
+
+    return Response.json({ ok: true });
+  } catch (error) {
+    // Manejo básico de errores (log opcional en producción)
+    return Response.json({ ok: false, error: "Invalid request" }, { status: 400 });
   }
-
-  const payload = {
-    ...data,
-    country,
-    ts: Date.now(),
-  }
-
-  // Broadcast a todos los admins conectados
-  clients.forEach((client) => {
-    try {
-      client.enqueue(`data: ${JSON.stringify(payload)}\n\n`)
-    } catch {}
-  })
-
-  return Response.json({ ok: true })
 }
