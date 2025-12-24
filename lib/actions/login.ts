@@ -71,7 +71,7 @@ export async function loginAction(state: { success: boolean; error?: string }, f
   cookieStore.set('authToken', token, {
     httpOnly: process.env.NODE_ENV === 'production',
     secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
     path: '/',
     maxAge: 60 * 60 * 24 * 7,
   })
