@@ -9,6 +9,7 @@ import { Toaster } from "@/components/ui/toaster"
 import { BehaviorTracker } from "@/components/behavior-tracker"
 import { UrgencyNotification } from "@/components/UrgencyNotification"
 
+
 import "./globals.css"
 
 const geist = Geist({ subsets: ["latin"] })

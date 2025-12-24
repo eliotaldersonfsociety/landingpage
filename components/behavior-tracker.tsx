@@ -99,6 +99,20 @@ export function BehaviorTracker({
     stored.push(event)
     await localforage.setItem(STORAGE_KEY, stored)
 
+    // Send to realtime API
+    try {
+      await fetch('/api/realtime', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: 'behavior',
+          ...event
+        })
+      })
+    } catch (e) {
+      console.error('Failed to send event', e)
+    }
+
     await predictScore()
 
     if (event.converted || stored.length >= MIN_EVENTS_TO_TRAIN) {
@@ -136,24 +150,64 @@ export function BehaviorTracker({
         window.scrollY /
         (document.body.scrollHeight - window.innerHeight)
       predictScore()
+
+      // Send scroll event
+      try {
+        fetch('/api/realtime', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            type: 'scroll',
+            scroll: lastScroll.current,
+            time: Date.now() - startTime.current,
+            clicks: clicks.current,
+            ctaSeen: 0,
+            converted: 0,
+          })
+        })
+      } catch (e) {
+        console.error('Failed to send scroll event', e)
+      }
     }
 
     const onClick = (e: Event) => {
       clicks.current++
       const el = e.target as HTMLElement
 
+      let eventType = 'click'
+
       if (
         el.closest('[data-action="add-to-cart"]') ||
         el.textContent?.toLowerCase().includes("agregar")
       ) {
         handleEvent({ ctaSeen: 1 })
-      }
-
-      if (
+        eventType = 'add_to_cart'
+      } else if (
         el.closest('[data-action="checkout"]') ||
         el.textContent?.toLowerCase().includes("checkout")
       ) {
         handleEvent({ converted: 1 })
+        eventType = 'checkout'
+      } else {
+        handleEvent({})
+      }
+
+      // Send click event
+      try {
+        fetch('/api/realtime', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            type: eventType,
+            scroll: lastScroll.current,
+            time: Date.now() - startTime.current,
+            clicks: clicks.current,
+            ctaSeen: eventType === 'add_to_cart' ? 1 : 0,
+            converted: eventType === 'checkout' ? 1 : 0,
+          })
+        })
+      } catch (e) {
+        console.error('Failed to send click event', e)
       }
     }
 

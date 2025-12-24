@@ -44,7 +44,7 @@ export default function LoginContent() {
 
 
   return (
-    <div className="min-h-screen bg-background px-4">
+    <div className="max-w-7xl mx-auto px-4 md:px-0 text-center">
       <Header />
 
       <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center px-4 pt-16">

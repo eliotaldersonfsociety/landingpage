@@ -174,7 +174,7 @@ export function CartSidebar({
                       className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-left"
                     >
                       Accept Terms (Required)
-                      <a href="#" className="text-blue-500 hover:underline ml-1">
+                      <a href="/terms-and-conditions" className="text-blue-500 hover:underline ml-1">
                         You can read our terms and conditions by clicking here.
                       </a>
                     </label>

@@ -47,6 +47,8 @@ export function HeaderAuthClient() {
 
   const handleLogout = async () => {
     await logoutAction()
+    setIsLoggedIn(false)
+    setUserInitial(null)
     router.push("/")
   }
 
@@ -94,22 +96,22 @@ export function HeaderAuthClient() {
                 <Menu className="h-5 w-5" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="right">
-              <SheetHeader>
-                <SheetTitle>Menu</SheetTitle>
-              </SheetHeader>
-              <nav className="flex flex-col gap-4 mt-6">
-                <Link href="/" className="flex items-center gap-2">
-                  Home
-                </Link>
-                <Link href="#products" className="flex items-center gap-2">
-                  Products
-                </Link>
-                <Link href="/login" className="flex items-center gap-2">
-                  Login
-                </Link>
-              </nav>
-            </SheetContent>
+          <SheetContent side="right">
+            <SheetHeader>
+              <SheetTitle>Menu</SheetTitle>
+            </SheetHeader>
+            <nav className="flex flex-col gap-4 mt-6">
+              <Link href="/" className="flex items-center gap-2">
+                Home
+              </Link>
+              <Link href="#products" className="flex items-center gap-2">
+                Products
+              </Link>
+              <Link href="/login" className="flex items-center gap-2">
+                Login
+              </Link>
+            </nav>
+          </SheetContent>
           </Sheet>
         </div>
       )}

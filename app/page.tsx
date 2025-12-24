@@ -1,16 +1,18 @@
+import dynamic from 'next/dynamic'
 import { Header } from "@/components/header/header"
 import { SocialNotificationsWrapper } from "@/components/social-notifications-wrapper"
 import { Hero } from "@/components/hero"
 import AlternatingContents from "@/components/alternativecontent/page"
 import { OrderProcess } from "@/components/order-process"
-import { Products } from "@/components/products"
+import { ProductsWrapper } from "@/components/products-wrapper"
 import { Testimonials } from "@/components/testimonials"
 import { Footer } from "@/components/footer"
-import { ResultsCarouselClient } from "@/components/result-carrousel/results-carousel.client"
 import { FAQs } from "@/components/faqs/faqs"
 import { DeliveryInfo } from "@/components/delivery-info"
 import { defaultProducts, type Product } from "@/lib/store"
 import { AITestimonials } from "@/components/ai-testimonials"
+
+const ResultsCarouselClient = dynamic(() => import('@/components/result-carrousel/results-carousel.client'))
 
 export default function HomePage() {
 
@@ -34,7 +36,7 @@ export default function HomePage() {
         </span>
       </div>
       <AlternatingContents />
-      <Products products={defaultProducts.slice(0, 1)} />
+      <ProductsWrapper products={defaultProducts.slice(0, 1)} />
       <ResultsCarouselClient />
       <AITestimonials />
       <div className="md:grid md:grid-cols-2 md:gap-8">

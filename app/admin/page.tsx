@@ -50,6 +50,7 @@ import { Header } from "@/components/header/header"
 import { Footer } from "@/components/footer"
 import { jwtDecode } from "jwt-decode"
 import { PredictiveHeatmap } from "@/components/predictive-heatmap"
+import { RealtimeBehaviorPanel } from "@/components/RealtimeBehaviorPanel"
 
 export default function AdminPage() {
   const [products, setProducts] = useState<Product[]>([])
@@ -485,135 +486,7 @@ export default function AdminPage() {
 
           {/* Analytics Tab */}
           <TabsContent value="analytics" className="space-y-6">
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              <Card className="border-primary/20 bg-gradient-to-br from-card to-primary/5 hover:shadow-lg transition-shadow">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Page Views</CardTitle>
-                  <div className="p-2 rounded-lg bg-primary/10">
-                    <Eye className="h-4 w-4 text-primary" />
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-3xl font-bold text-foreground">{summary.pageViews}</div>
-                  <p className="text-xs text-muted-foreground mt-1">Total visits to the site</p>
-                </CardContent>
-              </Card>
-
-              <Card className="border-secondary/20 bg-gradient-to-br from-card to-secondary/5 hover:shadow-lg transition-shadow">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Product Views</CardTitle>
-                  <div className="p-2 rounded-lg bg-secondary/10">
-                    <Package className="h-4 w-4 text-secondary" />
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-3xl font-bold text-foreground">{summary.productViews}</div>
-                  <p className="text-xs text-muted-foreground mt-1">Products viewed by users</p>
-                </CardContent>
-              </Card>
-
-              <Card className="border-accent/20 bg-gradient-to-br from-card to-accent/5 hover:shadow-lg transition-shadow">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Add to Cart</CardTitle>
-                  <div className="p-2 rounded-lg bg-accent/10">
-                    <ShoppingCart className="h-4 w-4 text-accent" />
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-3xl font-bold text-foreground">{summary.addToCarts}</div>
-                  <p className="text-xs text-muted-foreground mt-1">Items added to cart</p>
-                </CardContent>
-              </Card>
-
-              <Card className="border-chart-4/20 bg-gradient-to-br from-card to-chart-4/5 hover:shadow-lg transition-shadow">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Total Clicks</CardTitle>
-                  <div className="p-2 rounded-lg bg-chart-4/10">
-                    <MousePointerClick className="h-4 w-4 text-chart-4" />
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-3xl font-bold text-foreground">{summary.clicks}</div>
-                  <p className="text-xs text-muted-foreground mt-1">User interactions tracked</p>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Top Products */}
-            <Card className="border-border/50 shadow-sm">
-              <CardHeader className="bg-muted/30">
-                <CardTitle>Top Products by Cart Additions</CardTitle>
-                <CardDescription>Most popular products added to cart</CardDescription>
-              </CardHeader>
-              <CardContent>
-                {topProducts.length > 0 ? (
-                  <div className="space-y-4">
-                    {topProducts.map((product, index) => (
-                      <div key={product.name} className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-sm font-semibold">
-                            {index + 1}
-                          </div>
-                          <span className="font-medium">{product.name}</span>
-                        </div>
-                        <span className="text-muted-foreground">{product.count} additions</span>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-sm text-muted-foreground">No cart additions yet</p>
-                )}
-              </CardContent>
-            </Card>
-
-            {/* Recent Activity */}
-            <Card className="border-border/50 shadow-sm">
-              <CardHeader className="bg-muted/30">
-                <CardTitle>Recent Activity</CardTitle>
-                <CardDescription>Latest user interactions and events</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="overflow-x-auto">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Event Type</TableHead>
-                        <TableHead>Details</TableHead>
-                        <TableHead>Country</TableHead>
-                        <TableHead>Time</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {recentEvents.length > 0 ? (
-                        recentEvents.map((event, index) => (
-                          <TableRow key={index}>
-                            <TableCell className="font-medium capitalize">{event.type.replace("_", " ")}</TableCell>
-                            <TableCell className="text-muted-foreground">
-                              {event.data?.productName || event.data?.path || "-"}
-                            </TableCell>
-                            <TableCell className="text-muted-foreground">
-                              {getFlag(event.country || "")} {event.country}
-                            </TableCell>
-                            <TableCell className="text-muted-foreground">
-                              {new Date(event.timestamp).toLocaleString()}
-                            </TableCell>
-                          </TableRow>
-                        ))
-                      ) : (
-                        <TableRow>
-                          <TableCell colSpan={4} className="text-center text-muted-foreground">
-                            No events recorded yet
-                          </TableCell>
-                        </TableRow>
-                      )}
-                    </TableBody>
-                  </Table>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Predictive Heatmap */}
-            <PredictiveHeatmap />
+            <RealtimeBehaviorPanel />
           </TabsContent>
 
           {/* Behavior Tab */}

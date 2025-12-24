@@ -76,7 +76,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col px-4">
+    <div className="max-w-7xl mx-auto px-4 md:px-0 text-center">
       <Header />
       <main className="flex-1 py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto space-y-8">

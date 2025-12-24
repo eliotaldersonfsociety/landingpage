@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { ResultsCarousel } from "./results-carousel"
 
-export function ResultsCarouselClient() {
+function ResultsCarouselClient() {
   const [isPlaying, setIsPlaying] = useState(false)
 
   return (
@@ -14,3 +14,5 @@ export function ResultsCarouselClient() {
     />
   )
 }
+
+export default ResultsCarouselClient

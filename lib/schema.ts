@@ -10,6 +10,8 @@ export const users = sqliteTable('users', {
   department: text('department'),
   whatsappNumber: text('whatsapp_number'),
   role: text('role').notNull().default('user'),
+  resetToken: text('reset_token'),
+  resetTokenExpires: integer('reset_token_expires'),
 });
 
 export const orders = sqliteTable('orders', {
