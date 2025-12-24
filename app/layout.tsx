@@ -6,7 +6,6 @@ import { Analytics } from "@vercel/analytics/next"
 import { ThemeProvider } from "@/components/theme-provider"
 import { CartProvider } from "@/context/cart-context"
 import { Toaster } from "@/components/ui/toaster"
-import { BehaviorTracker } from "@/components/behavior-tracker"
 import { UrgencyNotification } from "@/components/UrgencyNotification"
 
 
@@ -60,9 +59,6 @@ export default function RootLayout({
 
             {/* UI global */}
             <Toaster />
-
-            {/* IA comportamiento */}
-            <BehaviorTracker />
 
             {/* Persuasión inteligente */}
             <UrgencyNotification />

@@ -97,6 +97,10 @@ export function BehaviorTracker({
       (await localforage.getItem<EventData[]>(STORAGE_KEY)) || []
 
     stored.push(event)
+    // Limit to 1000 entries, remove oldest
+    if (stored.length > 1000) {
+      stored.shift()
+    }
     await localforage.setItem(STORAGE_KEY, stored)
 
     // Send to realtime API

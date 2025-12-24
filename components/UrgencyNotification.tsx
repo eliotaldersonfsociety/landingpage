@@ -89,27 +89,6 @@ export function UrgencyNotification() {
     >
       <p className="leading-snug">{config.message}</p>
 
-      {config.cta && (
-        <button
-          onClick={() => {
-            document
-              .querySelector('[data-action="add-to-cart"]')
-              ?.dispatchEvent(
-                new MouseEvent("click", { bubbles: true })
-              )
-          }}
-          className="
-            mt-2
-            text-sm font-medium
-            text-zinc-900
-            underline underline-offset-4
-            opacity-80 hover:opacity-100
-            transition
-          "
-        >
-          {config.cta}
-        </button>
-      )}
     </div>
   )
 }

@@ -5,12 +5,7 @@ import type React from "react"
 import { useState, useEffect } from "react"
 import {
   ShoppingBag,
-  Package,
   BarChart3,
-  Plus,
-  Pencil,
-  Trash2,
-  Eye,
   ShoppingCart,
   MousePointerClick,
   ChevronLeft,
@@ -38,10 +33,8 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import {
-  productsStorage,
   analyticsStorage,
   contentStorage,
-  type Product,
   type AnalyticsEvent,
   type SiteContent,
 } from "@/lib/store"
@@ -53,25 +46,15 @@ import { PredictiveHeatmap } from "@/components/predictive-heatmap"
 import { RealtimeBehaviorPanel } from "@/components/RealtimeBehaviorPanel"
 
 export default function AdminPage() {
-  const [products, setProducts] = useState<Product[]>([])
   const [analytics, setAnalytics] = useState<AnalyticsEvent[]>([])
   const [content, setContent] = useState<SiteContent | null>(null)
   const [orders, setOrders] = useState<any[]>([])
   const [behaviorData, setBehaviorData] = useState<any[]>([])
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
-  const [editingProduct, setEditingProduct] = useState<Product | null>(null)
   const [selectedOrder, setSelectedOrder] = useState<any | null>(null)
   const [isOrderModalOpen, setIsOrderModalOpen] = useState(false)
   const [updatingStatus, setUpdatingStatus] = useState(false)
   const [adminInfo, setAdminInfo] = useState<{ email: string; name?: string } | null>(null)
   const [currentPage, setCurrentPage] = useState(1)
-  const [formData, setFormData] = useState({
-    name: "",
-    description: "",
-    price: "",
-    image: "",
-    category: "",
-  })
 
   useEffect(() => {
     // Check if user is admin
@@ -96,7 +79,6 @@ export default function AdminPage() {
   }, [])
 
   const loadData = async () => {
-    setProducts(productsStorage.get())
     setAnalytics(analyticsStorage.getAll())
     setContent(contentStorage.get())
 
@@ -120,52 +102,6 @@ export default function AdminPage() {
     }
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-
-    const productData: Product = {
-      id: editingProduct?.id || Date.now().toString(),
-      name: formData.name,
-      description: formData.description,
-      price: Number.parseFloat(formData.price),
-      image: formData.image,
-      category: formData.category,
-    }
-
-    if (editingProduct) {
-      productsStorage.update(productData)
-    } else {
-      productsStorage.add(productData)
-    }
-
-    setProducts(productsStorage.get())
-    resetForm()
-  }
-
-  const handleEdit = (product: Product) => {
-    setEditingProduct(product)
-    setFormData({
-      name: product.name,
-      description: product.description,
-      price: product.price.toString(),
-      image: product.image,
-      category: product.category,
-    })
-    setIsDialogOpen(true)
-  }
-
-  const handleDelete = (productId: string) => {
-    if (confirm("Are you sure you want to delete this product?")) {
-      productsStorage.delete(productId)
-      setProducts(productsStorage.get())
-    }
-  }
-
-  const resetForm = () => {
-    setFormData({ name: "", description: "", price: "", image: "", category: "" })
-    setEditingProduct(null)
-    setIsDialogOpen(false)
-  }
 
   const getAnalyticsSummary = () => {
     const pageViews = analytics.filter((e) => e.type === "page_view").length
@@ -270,7 +206,7 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="max-w-7xl mx-auto px-4 md:px-0 text-center">
       <Header />
 
       <main className="flex-1 bg-gradient-to-br from-background via-muted/30 to-background max-w-7xl mx-auto w-full px-4 md:px-6 py-8">
@@ -322,7 +258,7 @@ export default function AdminPage() {
         </div>
 
         <Tabs defaultValue="orders" className="space-y-6">
-          <TabsList className="grid w-full max-w-2xl grid-cols-4 bg-muted/50 p-1">
+          <TabsList className="grid w-full max-w-2xl grid-cols-2 bg-muted/50 p-1">
             <TabsTrigger value="orders" className="data-[state=active]:bg-card data-[state=active]:shadow">
               <ShoppingBag className="h-4 w-4 mr-2" />
               Orders
@@ -330,14 +266,6 @@ export default function AdminPage() {
             <TabsTrigger value="analytics" className="data-[state=active]:bg-card data-[state=active]:shadow">
               <BarChart3 className="h-4 w-4 mr-2" />
               Analytics
-            </TabsTrigger>
-            <TabsTrigger value="behavior" className="data-[state=active]:bg-card data-[state=active]:shadow">
-              <Eye className="h-4 w-4 mr-2" />
-              Behavior
-            </TabsTrigger>
-            <TabsTrigger value="products" className="data-[state=active]:bg-card data-[state=active]:shadow">
-              <Package className="h-4 w-4 mr-2" />
-              Products
             </TabsTrigger>
           </TabsList>
 
@@ -444,6 +372,12 @@ export default function AdminPage() {
               </CardContent>
             </Card>
 
+          </TabsContent>
+
+          {/* Analytics Tab */}
+          <TabsContent value="analytics" className="space-y-6">
+            <RealtimeBehaviorPanel />
+
             <Card className="border-primary/20 bg-gradient-to-br from-card to-accent/5">
               <CardHeader className="border-b border-border/50">
                 <div className="flex items-center gap-2">
@@ -480,202 +414,6 @@ export default function AdminPage() {
                 <p className="text-xs text-muted-foreground mt-4 text-center">
                   * Datos basados en comportamiento recolectado. Se actualizan en tiempo real.
                 </p>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          {/* Analytics Tab */}
-          <TabsContent value="analytics" className="space-y-6">
-            <RealtimeBehaviorPanel />
-          </TabsContent>
-
-          {/* Behavior Tab */}
-          <TabsContent value="behavior" className="space-y-6">
-            {/* Análisis de Comportamiento */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <Card>
-                <CardHeader className="bg-muted/30">
-                  <CardTitle>Estado del Modelo IA</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-lg">
-                    {behaviorData.length > 10 ? (
-                      <span className="text-green-600 font-semibold">✅ Modelo Entrenado</span>
-                    ) : (
-                      <span className="text-yellow-600 font-semibold">⏳ Entrenando Modelo...</span>
-                    )}
-                  </p>
-                  <p className="text-sm text-muted-foreground mt-2">Datos recolectados: {behaviorData.length}</p>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardHeader className="bg-muted/30">
-                  <CardTitle>Estadísticas de Engagement</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-2">
-                    <p>
-                      Scroll promedio:{" "}
-                      {((behaviorData.reduce((sum, d) => sum + d.scroll, 0) / behaviorData.length) * 100 || 0).toFixed(
-                        1,
-                      )}
-                      %
-                    </p>
-                    <p>
-                      Tiempo promedio:{" "}
-                      {((behaviorData.reduce((sum, d) => sum + d.time, 0) / behaviorData.length || 0) / 1000).toFixed(
-                        1,
-                      )}
-                      s
-                    </p>
-                    <p>
-                      Clicks promedio:{" "}
-                      {(behaviorData.reduce((sum, d) => sum + d.clicks, 0) / behaviorData.length || 0).toFixed(1)}
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between">
-                <div>
-                  <CardTitle>Generar Datos de Prueba</CardTitle>
-                  <CardDescription>Genera datos sintéticos para probar el análisis de comportamiento</CardDescription>
-                </div>
-                <Button onClick={generateSampleData} variant="outline">
-                  Generate Sample Data
-                </Button>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground">
-                  Haz clic en el botón para generar 50 puntos de datos de comportamiento de ejemplo. Esto permitirá
-                  entrenar el modelo IA y ver los resultados del análisis.
-                </p>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          {/* Products Tab */}
-          <TabsContent value="products" className="space-y-6">
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between">
-                <div>
-                  <CardTitle>Product Management</CardTitle>
-                  <CardDescription>Add, edit, or remove products from your store</CardDescription>
-                </div>
-                <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                  <DialogTrigger asChild>
-                    <Button onClick={() => resetForm()}>
-                      <Plus className="h-4 w-4 mr-2" />
-                      Add Product
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="sm:max-w-[500px]">
-                    <form onSubmit={handleSubmit}>
-                      <DialogHeader>
-                        <DialogTitle>{editingProduct ? "Edit Product" : "Add New Product"}</DialogTitle>
-                        <DialogDescription>
-                          {editingProduct
-                            ? "Update the product information below"
-                            : "Fill in the details to add a new product"}
-                        </DialogDescription>
-                      </DialogHeader>
-                      <div className="grid gap-4 py-4">
-                        <div className="grid gap-2">
-                          <Label htmlFor="name">Name</Label>
-                          <Input
-                            id="name"
-                            value={formData.name}
-                            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                            required
-                          />
-                        </div>
-                        <div className="grid gap-2">
-                          <Label htmlFor="description">Description</Label>
-                          <Textarea
-                            id="description"
-                            value={formData.description}
-                            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                            required
-                          />
-                        </div>
-                        <div className="grid gap-2">
-                          <Label htmlFor="price">Price</Label>
-                          <Input
-                            id="price"
-                            type="number"
-                            step="0.01"
-                            value={formData.price}
-                            onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                            required
-                          />
-                        </div>
-                        <div className="grid gap-2">
-                          <Label htmlFor="category">Category</Label>
-                          <Input
-                            id="category"
-                            value={formData.category}
-                            onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                            required
-                          />
-                        </div>
-                        <div className="grid gap-2">
-                          <Label htmlFor="image">Image URL</Label>
-                          <Input
-                            id="image"
-                            value={formData.image}
-                            onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                            placeholder="/placeholder.svg?height=400&width=400"
-                            required
-                          />
-                        </div>
-                      </div>
-                      <DialogFooter>
-                        <Button type="button" variant="outline" onClick={resetForm}>
-                          Cancel
-                        </Button>
-                        <Button type="submit">{editingProduct ? "Update" : "Create"} Product</Button>
-                      </DialogFooter>
-                    </form>
-                  </DialogContent>
-                </Dialog>
-              </CardHeader>
-              <CardContent>
-                <div className="overflow-x-auto">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Product</TableHead>
-                        <TableHead>Category</TableHead>
-                        <TableHead>Price</TableHead>
-                        <TableHead className="text-right">Actions</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {products.map((product) => (
-                        <TableRow key={product.id}>
-                          <TableCell>
-                            <div className="font-medium">{product.name}</div>
-                            <div className="text-sm text-muted-foreground line-clamp-1">{product.description}</div>
-                          </TableCell>
-                          <TableCell>{product.category}</TableCell>
-                          <TableCell>${product.price.toFixed(2)}</TableCell>
-                          <TableCell className="text-right">
-                            <div className="flex justify-end gap-2">
-                              <Button variant="ghost" size="icon" onClick={() => handleEdit(product)}>
-                                <Pencil className="h-4 w-4" />
-                              </Button>
-                              <Button variant="ghost" size="icon" onClick={() => handleDelete(product.id)}>
-                                <Trash2 className="h-4 w-4" />
-                              </Button>
-                            </div>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </div>
               </CardContent>
             </Card>
           </TabsContent>

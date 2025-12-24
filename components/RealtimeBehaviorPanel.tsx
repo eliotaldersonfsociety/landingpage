@@ -41,7 +41,7 @@ export function RealtimeBehaviorPanel() {
     [events]
   )
 
-  const { ready, training, predict, level } =
+  const { ready, training, predict, level, nextLevel, eventsToNext } =
     useBehaviorAI(behaviorSamples)
 
   // 🔹 SSE conexión
@@ -76,6 +76,9 @@ export function RealtimeBehaviorPanel() {
         })
       : 0
 
+  // Unique countries
+  const uniqueCountries = Array.from(new Set(events.map(e => e.country).filter(Boolean)))
+
   return (
     <Card className="border-primary/20">
       <CardHeader className="flex flex-row items-center justify-between">
@@ -93,13 +96,17 @@ export function RealtimeBehaviorPanel() {
             📡 Eventos: <strong>{events.length}</strong>
           </div>
           <div className="rounded border px-2 py-1">
-            🧠 Samples IA: <strong>{behaviorSamples.length}</strong>
+            🧠 Nivel IA: <strong>{level}</strong>
           </div>
         </div>
 
         <div className="text-xs text-muted-foreground">
-          Nivel entrenamiento:{" "}
-          {level > 0 ? `${level}+ eventos` : "—"}
+          Nivel IA: {level}
+          {nextLevel && eventsToNext !== null && (
+            <div className="text-xs">
+              Próximo: {nextLevel} ({eventsToNext} eventos)
+            </div>
+          )}
         </div>
 
         {/* 🧠 ESTADO */}
@@ -115,10 +122,38 @@ export function RealtimeBehaviorPanel() {
         </p>
 
         {/* 🔥 SCORE */}
-        {ready && score > 0.8 && (
-          <Badge className="bg-red-500 text-white">
-            🔥 Alta intención ({(score * 100).toFixed(0)}%)
-          </Badge>
+        {ready && (
+          <div className="text-sm">
+            <div className="mb-2">
+              <span className="font-medium">Intensidad de compra: </span>
+              <span className={
+                score > 0.8 ? "text-red-500 font-bold" :
+                score > 0.5 ? "text-orange-500 font-bold" :
+                "text-blue-500 font-bold"
+              }>
+                {score > 0.8 ? "🔥 Caliente" :
+                 score > 0.5 ? "🌡️ Tibio" :
+                 "❄️ Frío"} ({(score * 100).toFixed(0)}%)
+              </span>
+            </div>
+            {score > 0.8 && (
+              <Badge className="bg-red-500 text-white">
+                🔥 Alta intención de compra
+              </Badge>
+            )}
+          </div>
+        )}
+
+        {/* 🌍 COUNTRIES */}
+        {uniqueCountries.length > 0 && (
+          <div className="text-sm">
+            <div className="font-medium mb-2">Países conectados:</div>
+            <div className="flex flex-wrap gap-2">
+              {uniqueCountries.map(country => (
+                <span key={country} className="text-lg">{country}</span>
+              ))}
+            </div>
+          </div>
         )}
 
         {/* 🧪 DEBUG DATOS */}
