@@ -39,9 +39,9 @@ import {
   type SiteContent,
 } from "@/lib/store"
 import { getAllOrdersAction, updateOrderStatusAction } from "@/lib/actions/orders"
+import { getCurrentUser } from "@/lib/actions/login"
 import { Header } from "@/components/header/header"
 import { Footer } from "@/components/footer"
-import { jwtDecode } from "jwt-decode"
 import { PredictiveHeatmap } from "@/components/predictive-heatmap"
 import { RealtimeBehaviorPanel } from "@/components/RealtimeBehaviorPanel"
 
@@ -57,25 +57,24 @@ export default function AdminPage() {
   const [currentPage, setCurrentPage] = useState(1)
 
   useEffect(() => {
-    // Check if user is admin
-    const tokenCookie = document.cookie.split(";").find((c) => c.trim().startsWith("authToken="))
-    if (!tokenCookie) {
-      window.location.href = "/login"
-      return
-    }
-    try {
-      const token = tokenCookie.split("=")[1]
-      const decoded = jwtDecode<{ role: string; email: string; name?: string }>(token)
-      if (decoded.role !== "admin") {
-        window.location.href = "/dashboard"
-        return
+    const checkAuth = async () => {
+      try {
+        const user = await getCurrentUser()
+        if (!user) {
+          window.location.href = "/login"
+          return
+        }
+        if (user.role !== "admin") {
+          window.location.href = "/dashboard"
+          return
+        }
+        setAdminInfo({ email: user.email, name: user.name })
+        loadData()
+      } catch {
+        window.location.href = "/login"
       }
-      setAdminInfo({ email: decoded.email, name: decoded.name })
-    } catch {
-      window.location.href = "/login"
-      return
     }
-    loadData()
+    checkAuth()
   }, [])
 
   const loadData = async () => {

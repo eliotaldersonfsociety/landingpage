@@ -9,98 +9,133 @@ import { eq } from 'drizzle-orm'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 
-/* =========================
-   Validación
-========================= */
+// ─── Validación con Zod ───────────────────────────────
 const loginSchema = z.object({
   email: z.string().email('Email inválido'),
   password: z.string().min(1, 'La contraseña es requerida'),
 })
 
-/* =========================
-    Server Action
-========================= */
-export async function loginAction(state: { success: boolean; error?: string }, formData: FormData): Promise<{ success: boolean; error?: string }> {
-  // 🔹 Obtener datos
-  const email = formData.get('email')?.toString()
-  const password = formData.get('password')?.toString()
-  const redirectParam = formData.get('redirect')?.toString()
+// ─── Server Action: Login ─────────────────────────────
+export async function loginAction(
+  _prevState: { success: boolean; error?: string },
+  formData: FormData
+) {
+  try {
+    // 🔹 Leer datos del formulario
+    const email = formData.get('email')?.toString()?.trim()
+    const password = formData.get('password')?.toString()
+    const redirectParam = formData.get('redirect')?.toString()
 
-  // 🔹 Validar entrada
-  const validatedData = loginSchema.parse({ email, password })
+    if (!email || !password) {
+      return { success: false, error: 'Email y contraseña son requeridos' }
+    }
 
-  // 🔹 Buscar usuario
-  const userResult = await db
-    .select()
-    .from(users)
-    .where(eq(users.email, validatedData.email))
-    .limit(1)
+    console.log('Login attempt started')
+    console.log('Form data:', { email, redirectParam })
 
-  if (userResult.length === 0) {
-    return { success: false, error: 'Credenciales inválidas' }
+    // 🔹 Validar con Zod
+    const validatedData = loginSchema.parse({ email, password })
+    console.log('Validation passed')
+
+    // 🔹 Buscar usuario en la base de datos
+    console.log('Querying database...')
+    const userResult = await db
+      .select()
+      .from(users)
+      .where(eq(users.email, validatedData.email))
+      .limit(1)
+
+    console.log('Database result:', userResult.length)
+
+    if (userResult.length === 0) {
+      console.log('User not found')
+      return { success: false, error: 'Credenciales inválidas' }
+    }
+
+    const user = userResult[0]
+    console.log('User found:', user.id, user.email)
+
+    // 🔹 Determinar ruta de redirección
+    const redirectTo = user.role === 'admin' ? '/admin' : (redirectParam || '/dashboard')
+    console.log('Redirect to:', redirectTo)
+
+    // 🔹 Verificar contraseña
+    const isValidPassword = await bcrypt.compare(validatedData.password, user.password)
+    if (!isValidPassword) {
+      console.log('Invalid password')
+      return { success: false, error: 'Credenciales inválidas' }
+    }
+    console.log('Password valid')
+
+    // 🔹 Generar JWT
+    const secret = process.env.JWT_SECRET
+    if (!secret) {
+      console.error('JWT_SECRET no está definido en las variables de entorno')
+      return { success: false, error: 'Error interno del servidor' }
+    }
+
+    const token = jwt.sign(
+      {
+        userId: user.id,
+        email: user.email,
+        role: user.role,
+      },
+      secret,
+      { expiresIn: '7d' }
+    )
+    console.log('JWT generated')
+
+    // 🔹 Guardar en cookie (HTTP-only, seguro)
+    const cookieStore = await cookies()
+    cookieStore.set('authToken', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: '/',
+      maxAge: 60 * 60 * 24 * 7, // 7 días
+    })
+    console.log('Cookie set, redirecting to:', redirectTo)
+
+    // ✅ Redirigir (Next.js lanza NEXT_REDIRECT → es normal)
+    redirect(redirectTo)
+
+  } catch (error: any) {
+    // ❗ Ignorar NEXT_REDIRECT (es parte del flujo normal de Next.js)
+    if (error?.digest?.includes?.('NEXT_REDIRECT')) {
+      // No es un error → permitir que Next.js lo maneje
+      throw error
+    }
+
+    // ❌ Errores reales (validación, DB, etc.)
+    if (error instanceof z.ZodError) {
+      return { success: false, error: 'Datos inválidos' }
+    }
+
+    console.error('Login error real:', error)
+    return { success: false, error: 'Error interno del servidor' }
   }
-
-  const user = userResult[0]
-
-  // 🔹 Determinar redirect basado en rol
-  const redirectTo = user.role === 'admin' ? '/admin' : (redirectParam || '/dashboard')
-
-  // 🔹 Verificar contraseña
-  const isValidPassword = await bcrypt.compare(
-    validatedData.password,
-    user.password
-  )
-
-  if (!isValidPassword) {
-    return { success: false, error: 'Credenciales inválidas' }
-  }
-
-  // 🔹 Generar JWT
-  const token = jwt.sign(
-    {
-      userId: user.id,
-      email: user.email,
-      role: user.role,
-    },
-    process.env.JWT_SECRET || 'tu_secreto_jwt_aqui',
-    { expiresIn: '7d' }
-  )
-
-  // 🔹 Guardar cookie
-  const cookieStore = await cookies()
-  cookieStore.set('authToken', token, {
-    httpOnly: process.env.NODE_ENV === 'production',
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-    path: '/',
-    maxAge: 60 * 60 * 24 * 7,
-  })
-
-  // Redirect
-  redirect(redirectTo)
 }
 
-export async function getCurrentUser(): Promise<{ id: number; email: string; role: string; name?: string; address?: string; city?: string; department?: string; whatsappNumber?: string } | null> {
+// ─── Helper: Obtener usuario actual ───────────────────
+export async function getCurrentUser() {
   try {
     const cookieStore = await cookies()
     const token = cookieStore.get('authToken')?.value
-    if (!token) {
-      console.log('No authToken cookie found')
-      return null
-    }
-    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as any
 
-    // Fetch full user data from database
+    if (!token) return null
+
+    const secret = process.env.JWT_SECRET
+    if (!secret) return null
+
+    const decoded = jwt.verify(token, secret) as any
+
     const userResult = await db
       .select()
       .from(users)
       .where(eq(users.id, decoded.userId))
       .limit(1)
 
-    if (userResult.length === 0) {
-      console.log('User not found in database')
-      return null
-    }
+    if (userResult.length === 0) return null
 
     const user = userResult[0]
     return {
