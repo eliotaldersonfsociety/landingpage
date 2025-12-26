@@ -1,4 +1,5 @@
 import React from 'react'
+import Image from "next/image"
 
 interface Section {
   type: 'image' | 'video'
@@ -21,27 +22,27 @@ const sections: Section[] = [
     titlePart1: 'COLLECT THEM',
     titlePart2: 'ALL',
     description: 'Build your ultimate Labubu collection with monsters of all shapes and sizes. From sleepy bears to mischievous cats, each figure adds character to your display. Experience the thrill of collecting and trading these popular Pop Mart items. Join the global community of Labubu enthusiasts and expand your monster family.',
-    media: '/2.jpeg'
+    media: '/2.webp'
   },
   {
     type: 'image',
     titlePart1: 'SPECIAL BUNDLE',
     titlePart2: 'OFFER',
     description: 'Get 1 Labubu Monster and 2 Water Bottles for only $40! This exclusive bundle combines your favorite collectible with practical hydration essentials. Perfect for collectors who want to stay refreshed while building their monster collection. Don\'t miss this limited-time deal to add fun and functionality to your life.',
-    media: '/1.jpeg'
+    media: '/1.webp'
   },
   {
     type: 'image',
     titlePart1: 'SEE LABUBU',
     titlePart2: 'MAGIC',
     description: 'Watch the Labubu monsters come to life in our exciting video. See how these cute figures inspire creativity and bring smiles to faces everywhere. Learn about the Pop Mart phenomenon and why Labubu has captured hearts worldwide. Get inspired to start or expand your own collection today.',
-    media: '/3.jpeg' // placeholder youtube id
+    media: '/3.webp' // placeholder youtube id
   }
 ]
 
 export function AlternatingContent() {
   return (
-    <section className="">
+    <section>
       <div className="container">
         {sections.map((section, index) => (
           <div key={index} className="grid lg:grid-cols-2 gap-12 items-center mb-16">
@@ -55,7 +56,13 @@ export function AlternatingContent() {
             </div>
             <div className={`relative ${index % 2 === 0 ? 'order-1 lg:order-2' : 'order-1 lg:order-1'}`}>
               {section.type === 'image' ? (
-                <img src={section.media} alt={`${section.titlePart1} ${section.titlePart2}`} className="w-full h-64 lg:h-80 object-cover rounded-lg mask-hero mask-hero-double" />
+                <Image
+                    src={section.media}
+                    alt={`${section.titlePart1} ${section.titlePart2}`}
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                    className="object-cover rounded-lg mask-hero mask-hero-double"
+                  />
               ) : (
                 <div className="aspect-square">
                   <video
