@@ -46,7 +46,7 @@ export function HeaderAuthClient({
       {/* 🚪 LOGOUT */}
       {isLoggedIn && (
         <Button size="icon" variant="ghost" onClick={handleLogout}>
-          <LogOut className="h-5 w-5 text-white" />
+          <LogOut className="h-5 w-5" />
         </Button>
       )}
 
