@@ -8,7 +8,6 @@ import { Textarea } from "@/components/ui/textarea"
 import { OrderConfirmation } from "@/components/order-confirmation"
 import { createOrderAction, createOrderItemsAction } from "@/lib/actions/orders"
 import { cartStorage, CartItem } from "@/lib/store"
-import { Header } from "@/components/header/header"
 import { Footer } from "@/components/footer"
 import { useConversionScore } from "@/hooks/useConversionScore"
 
@@ -65,12 +64,10 @@ export default function CheckoutPage() {
     script.src = `https://www.paypal.com/sdk/js?client-id=${process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID}&currency=USD`
     script.async = true
     script.onload = () => {
-      console.log("PayPal SDK loaded successfully")
       setPaypalLoaded(true)
       setScriptLoaded(true)
     }
     script.onerror = () => {
-      console.error("Failed to load PayPal SDK")
       setError("Failed to load PayPal")
     }
     document.head.appendChild(script)
@@ -84,10 +81,8 @@ export default function CheckoutPage() {
     if (!container) return
 
     try {
-      console.log("Rendering PayPal button...")
       window.paypal.Buttons({
         createOrder: (_: any, actions: any) => {
-          console.log("Creating PayPal order...")
           return actions.order.create({
             purchase_units: [
               {
@@ -99,9 +94,7 @@ export default function CheckoutPage() {
 
         onApprove: async (_: any, actions: any) => {
           try {
-            console.log("Order approved, capturing...")
             const details = await actions.order.capture()
-            console.log("Order captured:", details)
 
             /* ---- CREATE ORDER ---- */
             const orderFormData = new FormData()
@@ -127,19 +120,16 @@ export default function CheckoutPage() {
 
             setOrderConfirmed(true)
           } catch (err: any) {
-            console.error("Payment error:", err)
             setError(err.message || "Payment failed")
           }
         },
 
         onError: (err: any) => {
-          console.error("PayPal error:", err)
           setError("PayPal error. Try again.")
         },
       }).render(container)
       setPaypalButtonRendered(true)
     } catch (e) {
-      console.error("PayPal render error:", e)
       setError("Failed to load payment method")
     }
   }, [scriptLoaded, total, orderItems, paypalButtonRendered])
@@ -153,7 +143,6 @@ export default function CheckoutPage() {
 
     return (
       <div className="min-h-screen container mx-auto px-4">
-        <Header />
         <div className="flex justify-center items-center min-h-[calc(100vh-4rem)]">
           <OrderConfirmation items={confirmationItems} />
         </div>
@@ -165,7 +154,6 @@ export default function CheckoutPage() {
   /* ---------- UI ---------- */
   return (
     <div className="min-h-screen container mx-auto px-4">
-      <Header />
 
       <div className="flex flex-col items-center min-h-[calc(100vh-4rem)] p-4 space-y-6">
 

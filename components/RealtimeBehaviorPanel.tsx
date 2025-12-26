@@ -80,10 +80,10 @@ export function RealtimeBehaviorPanel() {
   const uniqueCountries = Array.from(new Set(events.map(e => e.country).filter(Boolean)))
 
   return (
-    <Card className="border-primary/20">
-      <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle>Realtime + IA</CardTitle>
-        <Badge variant={connected ? "default" : "destructive"}>
+    <Card className="border-primary/20 bg-gradient-to-br from-card to-primary/5 hover:shadow-lg transition-all duration-300">
+      <CardHeader className="flex flex-row items-center justify-between pb-4">
+        <CardTitle className="text-xl font-bold">Realtime + IA</CardTitle>
+        <Badge variant={connected ? "default" : "destructive"} className="animate-pulse">
           {connected ? "LIVE" : "OFFLINE"}
         </Badge>
       </CardHeader>
@@ -91,40 +91,40 @@ export function RealtimeBehaviorPanel() {
       <CardContent className="space-y-3">
 
         {/* 🔢 CONTADORES */}
-        <div className="grid grid-cols-2 gap-2 text-xs">
-          <div className="rounded border px-2 py-1">
-            📡 Eventos: <strong>{events.length}</strong>
+        <div className="grid grid-cols-2 gap-3 text-xs">
+          <div className="rounded-lg border border-primary/20 bg-muted/20 px-3 py-2 hover:bg-muted/40 hover:scale-105 transition-all duration-200 shadow-sm">
+            📡 Eventos: <strong className="text-primary">{events.length}</strong>
           </div>
-          <div className="rounded border px-2 py-1">
-            🧠 Nivel IA: <strong>{level}</strong>
+          <div className="rounded-lg border border-secondary/20 bg-muted/20 px-3 py-2 hover:bg-muted/40 hover:scale-105 transition-all duration-200 shadow-sm">
+            🧠 Nivel IA: <strong className="text-secondary">{level}</strong>
           </div>
         </div>
 
-        <div className="text-xs text-muted-foreground">
-          Nivel IA: {level}
+        <div className="text-xs text-muted-foreground bg-muted/10 rounded-md p-2 border border-border/30">
+          Nivel IA: <span className="font-semibold text-foreground">{level}</span>
           {nextLevel && eventsToNext !== null && (
-            <div className="text-xs">
-              Próximo: {nextLevel} ({eventsToNext} eventos)
+            <div className="text-xs mt-1">
+              Próximo: <span className="font-semibold text-accent">{nextLevel}</span> ({eventsToNext} eventos)
             </div>
           )}
         </div>
 
         {/* 🧠 ESTADO */}
-        <p className="text-sm">
+        <div className="text-sm bg-gradient-to-r from-muted/20 to-muted/10 rounded-lg p-3 border border-border/30">
           Estado IA:{" "}
           {training ? (
-            <span className="text-yellow-500">Entrenando…</span>
+            <span className="text-yellow-500 font-semibold animate-pulse">Entrenando…</span>
           ) : ready ? (
-            <span className="text-green-600">Modelo listo</span>
+            <span className="text-green-600 font-semibold">Modelo listo</span>
           ) : (
-            <span className="text-muted-foreground">Esperando datos</span>
+            <span className="text-muted-foreground font-semibold">Esperando datos</span>
           )}
-        </p>
+        </div>
 
         {/* 🔥 SCORE */}
         {ready && (
-          <div className="text-sm">
-            <div className="mb-2">
+          <div className="text-sm bg-gradient-to-r from-card to-muted/20 rounded-lg p-4 border border-border/30 shadow-sm">
+            <div className="mb-3">
               <span className="font-medium">Intensidad de compra: </span>
               <span className={
                 score > 0.8 ? "text-red-500 font-bold" :
@@ -136,8 +136,18 @@ export function RealtimeBehaviorPanel() {
                  "❄️ Frío"} ({(score * 100).toFixed(0)}%)
               </span>
             </div>
+            <div className="w-full bg-muted rounded-full h-3 mb-2 overflow-hidden shadow-inner">
+              <div
+                className={`h-3 rounded-full transition-all duration-1000 ease-out ${
+                  score > 0.8 ? "bg-gradient-to-r from-red-500 to-red-600" :
+                  score > 0.5 ? "bg-gradient-to-r from-orange-500 to-orange-600" :
+                  "bg-gradient-to-r from-blue-500 to-blue-600"
+                }`}
+                style={{ width: `${score * 100}%` }}
+              ></div>
+            </div>
             {score > 0.8 && (
-              <Badge className="bg-red-500 text-white">
+              <Badge className="bg-red-500 text-white animate-bounce">
                 🔥 Alta intención de compra
               </Badge>
             )}
@@ -146,11 +156,13 @@ export function RealtimeBehaviorPanel() {
 
         {/* 🌍 COUNTRIES */}
         {uniqueCountries.length > 0 && (
-          <div className="text-sm">
-            <div className="font-medium mb-2">Países conectados:</div>
-            <div className="flex flex-wrap gap-2">
+          <div className="text-sm bg-gradient-to-r from-muted/10 to-accent/10 rounded-lg p-3 border border-border/30">
+            <div className="font-medium mb-3 text-foreground">Países conectados:</div>
+            <div className="flex flex-wrap gap-3">
               {uniqueCountries.map(country => (
-                <span key={country} className="text-lg">{country}</span>
+                <Badge key={country} variant="outline" className="text-lg px-3 py-1 hover:scale-110 transition-transform duration-200">
+                  {country}
+                </Badge>
               ))}
             </div>
           </div>
@@ -158,27 +170,30 @@ export function RealtimeBehaviorPanel() {
 
         {/* 🧪 DEBUG DATOS */}
         {last && (
-          <div className="text-xs border rounded p-2 bg-muted/30 space-y-1">
-            <div>scroll: {last.scroll ?? 0}</div>
-            <div>time: {last.time ?? 0}</div>
-            <div>clicks: {last.clicks ?? 0}</div>
-            <div>ctaSeen: {last.ctaSeen ?? 0}</div>
-            <div>addToCart: {last.addToCart ?? 0}</div>
+          <div className="text-xs border border-primary/20 rounded-lg p-3 bg-gradient-to-br from-muted/30 to-primary/5 space-y-2 shadow-sm">
+            <div className="font-semibold text-foreground mb-2">Último Evento:</div>
+            <div className="grid grid-cols-2 gap-2">
+              <div>📜 Scroll: <span className="font-mono text-primary">{last.scroll ?? 0}</span></div>
+              <div>⏱️ Tiempo: <span className="font-mono text-secondary">{last.time ?? 0}</span></div>
+              <div>👆 Clicks: <span className="font-mono text-accent">{last.clicks ?? 0}</span></div>
+              <div>👁️ CTA Seen: <span className="font-mono text-green-600">{last.ctaSeen ?? 0}</span></div>
+              <div>🛒 Add to Cart: <span className="font-mono text-orange-600">{last.addToCart ?? 0}</span></div>
+            </div>
           </div>
         )}
 
         {/* 📜 LOG */}
-        <div className="max-h-64 overflow-y-auto border rounded-md">
+        <div className="max-h-64 overflow-y-auto border border-border/50 rounded-lg bg-muted/10 shadow-inner">
           {events
             .slice()
             .reverse()
             .map((e, i) => (
               <div
                 key={i}
-                className="flex justify-between px-3 py-2 border-b text-sm"
+                className="flex justify-between px-4 py-3 border-b border-border/30 text-sm hover:bg-muted/20 transition-colors duration-150 last:border-b-0"
               >
-                <span>{e.type}</span>
-                <span className="text-muted-foreground">
+                <span className="font-medium text-foreground">{e.type}</span>
+                <span className="text-muted-foreground font-mono">
                   {e.country || "🌍"} ·{" "}
                   {new Date(e.ts).toLocaleTimeString()}
                 </span>

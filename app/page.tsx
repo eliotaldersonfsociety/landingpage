@@ -1,5 +1,4 @@
 import dynamic from 'next/dynamic'
-import { Header } from "@/components/header/header"
 import { SocialNotificationsWrapper } from "@/components/social-notifications-wrapper"
 import { Hero } from "@/components/hero"
 import AlternatingContents from "@/components/alternativecontent/page"
@@ -18,7 +17,6 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen max-w-7xl mx-auto px-4 md:px-0 text-center">
-      <Header />
       <SocialNotificationsWrapper />
       <Hero />
       <OrderProcess />

@@ -1,9 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
-
-// components/header/header-cart-client.tsx
-
+import { useEffect, useState } from "react"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { CartSidebar } from "@/components/cart-sidebar"
 import { useCart } from "@/context/cart-context"
@@ -13,7 +10,7 @@ export function HeaderCartClient() {
   const [showThemeToggle, setShowThemeToggle] = useState(true)
 
   useEffect(() => {
-    setShowThemeToggle(window.location.pathname !== '/checkout')
+    setShowThemeToggle(window.location.pathname !== "/checkout")
   }, [])
 
   return (

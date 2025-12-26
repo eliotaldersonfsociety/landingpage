@@ -9,7 +9,6 @@ import Image from "next/image"
 import { getUserOrdersAction } from "@/lib/actions/orders"
 import { getCurrentUser } from "@/lib/actions/login"
 import { useRouter } from "next/navigation"
-import { Header } from "@/components/header/header"
 import { Footer } from "@/components/footer"
 
 interface Order {
@@ -77,7 +76,6 @@ export default function DashboardPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 md:px-0 text-center">
-      <Header />
       <main className="flex-1 py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto space-y-8">
         <div className="text-center">

@@ -1,6 +1,5 @@
 "use client"
 
-import { Header } from "@/components/header/header"
 import { Footer } from "@/components/footer"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -21,7 +20,7 @@ export default function LoginContent() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const { toast } = useToast()
-  const [state, formAction, isPending] = useActionState(loginAction, { success: true, error: undefined })
+  const [state, formAction, isPending] = useActionState(loginAction, { success: false, error: '' })
 
   useEffect(() => {
     if (state.error) {
@@ -37,15 +36,14 @@ export default function LoginContent() {
       .split(";")
       .find(c => c.trim().startsWith("authToken="))
     if (tokenCookie) {
-      router.push('/dashboard')
+      router.push(redirect)
     }
-  }, [router])
+  }, [router, redirect])
 
 
 
   return (
     <div className="max-w-7xl mx-auto px-4 md:px-0 text-center">
-      <Header />
 
       <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center px-4 pt-16">
         

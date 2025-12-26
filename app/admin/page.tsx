@@ -40,7 +40,6 @@ import {
 } from "@/lib/store"
 import { getAllOrdersAction, updateOrderStatusAction } from "@/lib/actions/orders"
 import { getCurrentUser } from "@/lib/actions/login"
-import { Header } from "@/components/header/header"
 import { Footer } from "@/components/footer"
 import { PredictiveHeatmap } from "@/components/predictive-heatmap"
 import { RealtimeBehaviorPanel } from "@/components/RealtimeBehaviorPanel"
@@ -206,16 +205,15 @@ export default function AdminPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 md:px-0 text-center">
-      <Header />
 
       <main className="flex-1 bg-gradient-to-br from-background via-muted/30 to-background max-w-7xl mx-auto w-full px-4 md:px-6 py-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <Card className="border-primary/20 bg-gradient-to-br from-card to-primary/5 hover:shadow-lg transition-shadow">
+          <Card className="border-primary/20 bg-gradient-to-br from-card via-primary/5 to-card hover:shadow-xl hover:scale-105 transition-all duration-300 group">
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-base">Administrador</CardTitle>
-                <div className="p-2 rounded-lg bg-primary/10">
-                  <Users className="h-5 w-5 text-primary" />
+                <div className="p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors">
+                  <Users className="h-5 w-5 text-primary group-hover:scale-110 transition-transform" />
                 </div>
               </div>
             </CardHeader>
@@ -225,12 +223,12 @@ export default function AdminPage() {
             </CardContent>
           </Card>
 
-          <Card className="border-secondary/20 bg-gradient-to-br from-card to-secondary/5 hover:shadow-lg transition-shadow">
+          <Card className="border-secondary/20 bg-gradient-to-br from-card via-secondary/5 to-card hover:shadow-xl hover:scale-105 transition-all duration-300 group">
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-base">Número de Compras</CardTitle>
-                <div className="p-2 rounded-lg bg-secondary/10">
-                  <ShoppingBag className="h-5 w-5 text-secondary" />
+                <div className="p-2 rounded-lg bg-secondary/10 group-hover:bg-secondary/20 transition-colors">
+                  <ShoppingBag className="h-5 w-5 text-secondary group-hover:scale-110 transition-transform" />
                 </div>
               </div>
             </CardHeader>
@@ -240,12 +238,12 @@ export default function AdminPage() {
             </CardContent>
           </Card>
 
-          <Card className="border-green-500/20 bg-gradient-to-br from-card to-green-500/5 hover:shadow-lg transition-shadow">
+          <Card className="border-green-500/20 bg-gradient-to-br from-card via-green-500/5 to-card hover:shadow-xl hover:scale-105 transition-all duration-300 group">
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-base">Total de Compras</CardTitle>
-                <div className="p-2 rounded-lg bg-green-500/10">
-                  <DollarSign className="h-5 w-5 text-green-600 dark:text-green-400" />
+                <div className="p-2 rounded-lg bg-green-500/10 group-hover:bg-green-500/20 transition-colors">
+                  <DollarSign className="h-5 w-5 text-green-600 dark:text-green-400 group-hover:scale-110 transition-transform" />
                 </div>
               </div>
             </CardHeader>
@@ -257,12 +255,12 @@ export default function AdminPage() {
         </div>
 
         <Tabs defaultValue="orders" className="space-y-6">
-          <TabsList className="grid w-full max-w-2xl grid-cols-2 bg-muted/50 p-1">
-            <TabsTrigger value="orders" className="data-[state=active]:bg-card data-[state=active]:shadow">
+          <TabsList className="grid w-full max-w-2xl grid-cols-2 bg-muted/50 p-1 rounded-xl shadow-sm">
+            <TabsTrigger value="orders" className="data-[state=active]:bg-card data-[state=active]:shadow data-[state=active]:scale-105 transition-all duration-200 rounded-lg">
               <ShoppingBag className="h-4 w-4 mr-2" />
               Orders
             </TabsTrigger>
-            <TabsTrigger value="analytics" className="data-[state=active]:bg-card data-[state=active]:shadow">
+            <TabsTrigger value="analytics" className="data-[state=active]:bg-card data-[state=active]:shadow data-[state=active]:scale-105 transition-all duration-200 rounded-lg">
               <BarChart3 className="h-4 w-4 mr-2" />
               Analytics
             </TabsTrigger>
@@ -284,11 +282,11 @@ export default function AdminPage() {
                       {paginatedOrders.map((order) => (
                         <Card
                           key={order.id}
-                          className="p-5 border-border/50 hover:border-primary/30 transition-all hover:shadow-md"
+                          className="p-5 border-border/50 hover:border-primary/30 hover:shadow-lg hover:scale-[1.02] transition-all duration-300 group"
                         >
                           <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-3">
                             <div>
-                              <h3 className="text-lg font-bold">Order #{order.id}</h3>
+                              <h3 className="text-lg font-bold group-hover:text-primary transition-colors">Order #{order.id}</h3>
                               <p className="text-sm text-muted-foreground mt-1">
                                 Customer: {order.user?.name || order.user?.email}
                               </p>
@@ -303,7 +301,7 @@ export default function AdminPage() {
                                       ? "outline"
                                       : "default"
                                 }
-                                className="w-fit"
+                                className="w-fit group-hover:scale-105 transition-transform"
                               >
                                 {order.status === "pending"
                                   ? "Orden Recibida"
@@ -311,11 +309,11 @@ export default function AdminPage() {
                                     ? "Pago Confirmado"
                                     : "Producto Enviado"}
                               </Badge>
-                              <p className="text-xl font-bold text-primary">${order.total.toFixed(2)}</p>
+                              <p className="text-xl font-bold text-primary group-hover:scale-105 transition-transform">${order.total.toFixed(2)}</p>
                             </div>
                           </div>
 
-                          <div className="space-y-2 p-3 rounded-lg bg-muted/30 border border-border/30">
+                          <div className="space-y-2 p-3 rounded-lg bg-muted/30 border border-border/30 group-hover:bg-muted/50 transition-colors">
                             <h4 className="font-semibold text-sm">Products ({order.items.length}):</h4>
                             <div className="text-sm text-muted-foreground">
                               {order.items
@@ -330,7 +328,7 @@ export default function AdminPage() {
                             <Button
                               variant="outline"
                               size="sm"
-                              className="hover:bg-primary hover:text-primary-foreground transition-colors bg-transparent"
+                              className="hover:bg-primary hover:text-primary-foreground hover:shadow-md transition-all duration-200 bg-transparent"
                               onClick={() => {
                                 setSelectedOrder(order)
                                 setIsOrderModalOpen(true)
@@ -377,7 +375,7 @@ export default function AdminPage() {
           <TabsContent value="analytics" className="space-y-6">
             <RealtimeBehaviorPanel />
 
-            <Card className="border-primary/20 bg-gradient-to-br from-card to-accent/5">
+            <Card className="border-primary/20 bg-gradient-to-br from-card to-accent/5 hover:shadow-lg transition-shadow">
               <CardHeader className="border-b border-border/50">
                 <div className="flex items-center gap-2">
                   <Activity className="h-5 w-5 text-accent" />
@@ -395,17 +393,17 @@ export default function AdminPage() {
                   ].map((section) => (
                     <div
                       key={section.name}
-                      className="flex items-center justify-between p-4 border border-border/50 rounded-lg bg-card/50 hover:bg-card transition-colors"
+                      className="flex flex-col sm:flex-row sm:items-center justify-between p-4 border border-border/50 rounded-lg bg-card/50 hover:bg-card hover:shadow-md hover:scale-[1.01] transition-all duration-300 group gap-3"
                     >
-                      <span className="font-semibold text-foreground">{section.name}</span>
-                      <div className="flex items-center gap-3">
-                        <div className="w-32 bg-muted rounded-full h-3 overflow-hidden shadow-inner">
+                      <span className="font-semibold text-foreground group-hover:text-accent transition-colors">{section.name}</span>
+                      <div className="flex items-center gap-3 w-full sm:w-auto">
+                        <div className="flex-1 sm:w-32 bg-muted rounded-full h-3 overflow-hidden shadow-inner">
                           <div
-                            className={`${section.color} h-3 rounded-full transition-all duration-500`}
+                            className={`${section.color} h-3 rounded-full transition-all duration-1000 ease-out group-hover:shadow-lg`}
                             style={{ width: `${section.value}%` }}
                           ></div>
                         </div>
-                        <span className="text-sm font-bold min-w-[80px] text-right">{section.value}% alcanzan</span>
+                        <span className="text-sm font-bold text-left sm:text-right group-hover:scale-105 transition-transform whitespace-nowrap">{section.value}% alcanzan</span>
                       </div>
                     </div>
                   ))}
@@ -421,9 +419,9 @@ export default function AdminPage() {
 
       {/* Order Details Modal */}
       <Dialog open={isOrderModalOpen} onOpenChange={setIsOrderModalOpen}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>Detalles del Pedido #{selectedOrder?.id}</DialogTitle>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-gradient-to-br from-card to-muted/20 rounded-xl shadow-2xl border-0">
+          <DialogHeader className="pb-4">
+            <DialogTitle className="text-2xl font-bold text-foreground">Detalles del Pedido #{selectedOrder?.id}</DialogTitle>
           </DialogHeader>
           {selectedOrder && (
             <div className="space-y-6">
@@ -472,17 +470,21 @@ export default function AdminPage() {
                 </Select>
               </div>
 
-              <div>
-                <h4 className="font-medium mb-2">Productos:</h4>
-                <div className="space-y-2">
-                  {selectedOrder.items.map((item: any) => (
-                    <div key={item.id} className="flex justify-between items-center border-b pb-2">
-                      <span>{item.name}</span>
-                      <span className="font-medium">${item.price.toFixed(2)}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              <Card className="border-border/50 bg-muted/20">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-lg">Productos:</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2">
+                    {selectedOrder.items.map((item: any) => (
+                      <div key={item.id} className="flex justify-between items-center border-b border-border/30 pb-2 last:border-b-0">
+                        <span className="font-medium">{item.name}</span>
+                        <span className="font-bold text-primary">${item.price.toFixed(2)}</span>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
 
               {selectedOrder.additionalInfo && (
                 <div>
