@@ -409,6 +409,18 @@ export async function createOrderItems(data: OrderItemData & { items: Array<{ na
       items: data.items,
     })
 
+    // Verificar precios contra productos por defecto
+    const { defaultProducts } = await import('@/lib/store')
+    for (const item of validatedData.items) {
+      const product = defaultProducts.find(p => p.name === item.name)
+      if (!product) {
+        return { success: false, error: 'Producto no encontrado' }
+      }
+      if (product.price !== item.price) {
+        return { success: false, error: 'Precio manipulado detectado' }
+      }
+    }
+
     // Verificar que el pedido existe y pertenece al usuario
     const userId = await getUserIdFromToken()
     const orderCheck = await db.select().from(orders).where(

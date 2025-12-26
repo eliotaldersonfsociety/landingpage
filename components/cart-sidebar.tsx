@@ -55,13 +55,10 @@ export function CartSidebar({
   }, [cart.length, isOpen, onOpenChange, router])
 
   const handleCheckout = () => {
-    onOpenChange(false)
-    if (isLoggedIn) {
-      router.push("/checkout")
-    } else {
-      router.push("/login?redirect=/checkout")
-    }
-  }
+  onOpenChange(false)
+  router.push("/checkout")
+}
+
 
   return (
     <div suppressHydrationWarning>
