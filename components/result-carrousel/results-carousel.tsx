@@ -1,3 +1,4 @@
+import Image from "next/image"
 import { Play } from "lucide-react"
 
 interface ResultsCarouselProps {
@@ -37,12 +38,16 @@ export function ResultsCarousel({
               onClick={onPlay}
               className="relative group w-full h-full rounded-lg overflow-hidden"
             >
-              <img
+              {/* PREVIEW IMAGE */}
+              <Image
                 src="/video2.webp"
                 alt="Labubu preview"
-                className="w-full h-full object-cover"
+                fill
+                sizes="(max-width: 768px) 100vw, 448px"
+                className="object-cover"
               />
 
+              {/* OVERLAY */}
               <span className="absolute inset-0 flex items-center justify-center bg-black/30">
                 <span className="bg-black/50 p-4 rounded-full group-hover:scale-110 transition">
                   <Play className="w-8 h-8 text-white" />
@@ -55,6 +60,7 @@ export function ResultsCarousel({
               autoPlay
               controls
               playsInline
+              preload="metadata"
               className="w-full h-full rounded-lg shadow-lg"
               onEnded={onEnded}
             />

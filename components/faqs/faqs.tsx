@@ -1,3 +1,4 @@
+import Image from "next/image"
 import { FAQAccordionClient } from "./faq-accordion-client"
 
 const faqs = [
@@ -33,10 +34,14 @@ export function FAQs() {
     <section id="faqs" className="py-12">
       <div className="container mx-auto px-4 text-center">
         <div className="flex items-center justify-center mb-8">
-          <img
+          {/* ICON */}
+          <Image
             src="/interrogacion.webp"
             alt="Frequently Asked Questions"
-            className="h-20 w-15 mr-4"
+            width={60}
+            height={80}
+            sizes="60px"
+            className="mr-4"
           />
 
           <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-left">
