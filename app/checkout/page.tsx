@@ -8,7 +8,6 @@ import { Textarea } from "@/components/ui/textarea"
 import { OrderConfirmation } from "@/components/order-confirmation"
 import { createOrderAction, createOrderItemsAction } from "@/lib/actions/orders"
 import { cartStorage, CartItem } from "@/lib/store"
-import { Footer } from "@/components/footer"
 import { useConversionScore } from "@/hooks/useConversionScore"
 
 declare global {
@@ -146,7 +145,6 @@ export default function CheckoutPage() {
         <div className="flex justify-center items-center min-h-[calc(100vh-4rem)]">
           <OrderConfirmation items={confirmationItems} />
         </div>
-        <Footer />
       </div>
     )
   }
@@ -237,7 +235,6 @@ export default function CheckoutPage() {
         </div>
       </div>
 
-      <Footer />
     </div>
   )
 }

@@ -10,7 +10,8 @@ import { Toaster } from "@/components/ui/toaster"
 import { UrgencyNotification } from "@/components/UrgencyNotification"
 import { LoadBehaviorAI } from "@/components/LoadBehaviorAI"
 
-import { Header } from "@/components/header/header" // 👈 AÑADIR
+import { Header } from "@/components/header/header"
+import { Footer } from "@/components/footer" // 👈 AÑADIR
 
 import "./globals.css"
 
@@ -22,14 +23,6 @@ export const metadata: Metadata = {
   description:
     "The internet’s favorite viral products, delivered fast with secure checkout at TiendaTexas.",
   generator: "Bucaramarketing",
-  icons: {
-    icon: [
-      { url: "/icon-light-32x32.png", media: "(prefers-color-scheme: light)" },
-      { url: "/icon-dark-32x32.png", media: "(prefers-color-scheme: dark)" },
-      { url: "/icon.png", type: "image/svg+xml" },
-    ],
-    apple: "/apple-icon.png",
-  },
 }
 
 export default function RootLayout({
@@ -47,23 +40,31 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <CartProvider>
+
             {/* 🔥 HEADER GLOBAL */}
-            <div className="max-w-7xl mx-auto px-4 md:px-0 text-center"><Header /></div>
-            
+            <header className="max-w-7xl mx-auto px-4 md:px-0">
+              <Header />
+            </header>
 
-            {/* PÁGINAS */}
-            {children}
+            {/* 📄 CONTENIDO DE CADA PÁGINA */}
+            <main className="min-h-[calc(100vh-160px)]">
+              {children}
+            </main>
 
-            {/* UI global */}
+            {/* 🔻 FOOTER */}
+            <Footer />
+
+            {/* UI GLOBAL */}
             <Toaster />
             <UrgencyNotification />
+
           </CartProvider>
         </ThemeProvider>
 
-        {/* 🔥 IA + tracking */}
+        {/* 🤖 IA + TRACKING */}
         <LoadBehaviorAI />
 
-        {/* Analytics */}
+        {/* 📊 ANALYTICS */}
         <Analytics />
       </body>
     </html>

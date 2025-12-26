@@ -1,6 +1,5 @@
 "use client"
 
-import { Footer } from "@/components/footer"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -137,7 +136,6 @@ export default function LoginContent() {
         </div>
       </div>
 
-      <Footer />
 
       <NavigationMenu />
     </div>

@@ -5,7 +5,6 @@ import AlternatingContents from "@/components/alternativecontent/page"
 import { OrderProcess } from "@/components/order-process"
 import { ProductsWrapper } from "@/components/products-wrapper"
 import { Testimonials } from "@/components/testimonials"
-import { Footer } from "@/components/footer"
 import { FAQs } from "@/components/faqs/faqs"
 import { DeliveryInfo } from "@/components/delivery-info"
 import { defaultProducts, type Product } from "@/lib/store"
@@ -42,7 +41,6 @@ export default function HomePage() {
         <FAQs />
       </div>
       <OrderProcess />
-      <Footer />
     </div>
   )
 }

@@ -9,7 +9,6 @@ import Image from "next/image"
 import { getUserOrdersAction } from "@/lib/actions/orders"
 import { getCurrentUser } from "@/lib/actions/login"
 import { useRouter } from "next/navigation"
-import { Footer } from "@/components/footer"
 
 interface Order {
   id: number
@@ -212,7 +211,6 @@ export default function DashboardPage() {
         </Dialog>
         </div>
       </main>
-      <Footer />
     </div>
   )
 }

@@ -1,6 +1,5 @@
 "use client"
 
-import { Footer } from "@/components/footer"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -86,7 +85,6 @@ export default function ResetPasswordContent() {
         <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center px-4 pt-16">
           <div className="text-white">Validating token...</div>
         </div>
-        <Footer />
       </div>
     )
   }
@@ -105,7 +103,6 @@ export default function ResetPasswordContent() {
             </Link>
           </div>
         </div>
-        <Footer />
       </div>
     )
   }
@@ -202,7 +199,6 @@ export default function ResetPasswordContent() {
         </div>
       </div>
 
-      <Footer />
     </div>
   )
 }

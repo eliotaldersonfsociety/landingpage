@@ -40,7 +40,6 @@ import {
 } from "@/lib/store"
 import { getAllOrdersAction, updateOrderStatusAction } from "@/lib/actions/orders"
 import { getCurrentUser } from "@/lib/actions/login"
-import { Footer } from "@/components/footer"
 import { PredictiveHeatmap } from "@/components/predictive-heatmap"
 import { RealtimeBehaviorPanel } from "@/components/RealtimeBehaviorPanel"
 
@@ -524,7 +523,6 @@ export default function AdminPage() {
         </DialogContent>
       </Dialog>
 
-      <Footer />
     </div>
   )
 }
