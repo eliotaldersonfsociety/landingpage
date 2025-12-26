@@ -1,6 +1,8 @@
 import { Star, Truck, Package, ShieldCheck } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { CustomerReviews } from "@/components/customer-reviews"
+import Image from "next/image"
+
 
 export function Hero() {
   return (
@@ -55,7 +57,15 @@ export function Hero() {
           <div className="relative h-[400px] lg:h-[500px] order-1 lg:order-2">
             <div className="absolute rounded-3xl bg-gradient-to-r from-blue-500 to-blue-900 opacity-40" />
             <div className="absolute inset-0 overflow-hidden rounded-3xl">
-              <img src="/1.webp" alt="Hero" className="w-full h-full object-cover mask-hero" />
+              <Image
+                src="/1.webp"
+                alt="Labubu hero banner"
+                fill
+                priority
+                fetchPriority="high"
+                className="object-cover mask-hero"
+              />
+
             </div>
 
             {/* Pricing overlay */}
