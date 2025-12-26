@@ -96,7 +96,7 @@ export function RealtimeBehaviorPanel() {
             📡 Eventos: <strong className="text-primary">{events.length}</strong>
           </div>
           <div className="rounded-lg border border-secondary/20 bg-muted/20 px-3 py-2 hover:bg-muted/40 hover:scale-105 transition-all duration-200 shadow-sm">
-            🧠 Nivel IA: <strong className="text-secondary">{level}</strong>
+            🧠 Nivel IA: <strong>{level}</strong>
           </div>
         </div>
 
