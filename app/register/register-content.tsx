@@ -1,6 +1,5 @@
 "use client"
 
-import { Header } from "@/components/header/header"
 import { Footer } from "@/components/footer"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -54,7 +53,6 @@ export default function RegisterContent() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 md:px-0 text-center">
-      <Header />
 
       <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center px-4 pt-16">
         <div className="w-full max-w-md space-y-8">
