@@ -67,7 +67,7 @@ export function CartSidebar({
     <div suppressHydrationWarning>
       <Sheet open={isOpen} onOpenChange={onOpenChange}>
         <SheetTrigger asChild>
-          <Button variant="outline" size="icon" className="relative bg-transparent">
+          <Button variant="outline" size="icon" className="relative bg-transparent" aria-label="View cart">
             <ShoppingCart className="h-5 w-5" />
             {itemCount > 0 && (
               <Badge className="absolute -right-2 -top-2 h-5 w-5 rounded-full p-0 flex items-center justify-center">

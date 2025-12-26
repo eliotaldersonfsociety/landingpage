@@ -37,7 +37,7 @@ export function HeaderAuthClient({
         </Link>
       ) : (
         <Link href="/login">
-        <Button size="icon" variant="ghost">
+        <Button size="icon" variant="ghost" aria-label="Go to dashboard">
           <User className="h-5 w-5" />
         </Button>
         </Link>
@@ -45,7 +45,7 @@ export function HeaderAuthClient({
 
       {/* 🚪 LOGOUT */}
       {isLoggedIn && (
-        <Button size="icon" variant="ghost" onClick={handleLogout}>
+        <Button size="icon" variant="ghost" aria-label="Log out" onClick={handleLogout}>
           <LogOut className="h-5 w-5" />
         </Button>
       )}
@@ -53,7 +53,7 @@ export function HeaderAuthClient({
       {/* ☰ HAMBURGUESA */}
       <Sheet>
         <SheetTrigger asChild>
-          <Button size="icon" variant="ghost">
+          <Button size="icon" variant="ghost" aria-label="Open menu">
             <Menu className="h-5 w-5" />
           </Button>
         </SheetTrigger>
