@@ -73,7 +73,7 @@ export function AlternatingContent() {
   const [playing, setPlaying] = useState<number | null>(null)
 
   return (
-    <section className="py-16">
+    <section className="py-1">
       <div className="container mx-auto px-4">
         {sections.map((section, index) => (
           <div
