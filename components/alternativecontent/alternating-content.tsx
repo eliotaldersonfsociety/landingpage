@@ -25,28 +25,36 @@ const sections: Section[] = [
   },
   {
     type: "image",
-    titlePart1: "COLLECT THEM",
-    titlePart2: "ALL",
+    titlePart1: "THE PERFECT GIFT",
+    titlePart2: "THEY'LL REMEMBER 🎁",
     description:
-      "Build your ultimate Labubu collection with monsters of all shapes and sizes.",
+      "Beautifully packed and ready to surprise.🎄 Perfect for birthdays & holidays🎁 Premium packaging 😊 Instant smiles guaranteed",
     media: "/2.webp",
   },
   {
     type: "image",
-    titlePart1: "SPECIAL BUNDLE",
-    titlePart2: "OFFER",
+    titlePart1: "MORE THAN A TOY",
+    titlePart2: "A BEST FRIEND 💛",
     description:
-      "Get 1 Labubu Monster and 2 Water Bottles for only $40!",
-    media: "/1.webp",
+      "Soft, adorable, and designed to bring comfort anywhere. A hug they’ll never want to let go.",
+    media: "/3.webp",
   },
   {
     type: "image",
-    titlePart1: "SEE LABUBU",
-    titlePart2: "MAGIC",
+    titlePart1: "LOVED BY KIDS",
+    titlePart2: "TRUSTED BY PARENTS ✅",
     description:
-      "Watch the Labubu monsters come to life and get inspired.",
-    media: "/3.webp",
+      "Perfect for school, playtime, and everyday adventures. ✔️ Safe materials ✔️ Easy to clean ✔️ Kid-approved comfort",
+    media: "/4.webp",
   },
+  {
+    type: "image",
+    titlePart1: "SHIPS FAST FROM",
+    titlePart2: "HOT SPRINGS, TX us 🚚",
+    description:
+      "Fulfilled in the U.S. · Fast shipping from Hot Springs, TX · No long waits.",
+    media: "/5.webp",
+  }
 ]
 
 export function AlternatingContent() {

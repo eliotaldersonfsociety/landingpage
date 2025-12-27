@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import { ShoppingCart } from "lucide-react"
+import { ShoppingCart, Truck } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -28,13 +28,10 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
       ([entry]) => {
         setInView(entry.isIntersecting)
       },
-      {
-        threshold: 0.6, // 60% visible
-      }
+      { threshold: 0.6 }
     )
 
     observer.observe(ref.current)
-
     return () => observer.disconnect()
   }, [])
 
@@ -77,6 +74,7 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
             </div>
           </div>
 
+          {/* ADD TO CART BUTTON */}
           <Button
             className={`
               w-full transition
@@ -88,6 +86,38 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
             <ShoppingCart className="h-4 w-4 mr-2" />
             Add to Cart
           </Button>
+
+          {/* PAYMENT LOGOS — SOLO CUANDO ESTÁ EN VERDE */}
+          {inView && (
+            <>
+              <div className="flex items-center gap-2 mt-1 text-xs text-muted-foreground">
+                <span>Pay secure with</span>
+
+                <Image
+                  src="/paypal.svg"
+                  alt="PayPal"
+                  width={32}
+                  height={20}
+                />
+                <Image
+                  src="/visa.svg"
+                  alt="Visa"
+                  width={32}
+                  height={20}
+                />
+                <Image
+                  src="/mastercard.svg"
+                  alt="Mastercard"
+                  width={32}
+                  height={20}
+                />
+              </div>
+              <div className="flex items-center gap-1 mt-1 text-xs text-muted-foreground">
+              <Truck/>
+                <span> Ships from <strong>Hot Springs, TX</strong> · 1 business days</span>
+              </div>
+            </>
+          )}
         </CardFooter>
       </Card>
     </div>
