@@ -13,7 +13,7 @@ export function ResultsCarousel({
   onEnded,
 }: ResultsCarouselProps) {
   return (
-    <section id="results" className="py-10">
+    <section id="results" className="py-4">
       <div className="container mx-auto px-4 grid md:grid-cols-2 gap-10 items-center">
         {/* TEXT */}
         <div className="space-y-4 text-center md:text-left">
