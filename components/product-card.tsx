@@ -91,7 +91,7 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
           {inView && (
             <>
               <div className="flex items-center gap-2 mt-1 text-xs text-muted-foreground">
-                <span>Pay secure with</span>
+                <span className="text-[11px] text-muted-foreground">Pay secure with</span>
 
                 <Image
                   src="/paypal.svg"
@@ -116,6 +116,8 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
               <Truck/>
                 <span> Ships from <strong>Hot Springs, TX</strong> · 1 business days</span>
               </div>
+              <div className="flex items-center gap-1 mt-1 text-[10px] text-muted-foreground">✔ No hidden fees
+✔ Safe & encrypted payment</div>
             </>
           )}
         </CardFooter>
