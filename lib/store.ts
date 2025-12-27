@@ -59,7 +59,7 @@ export interface SiteContent {
 export const defaultProducts: Product[] = [
   {
     id: "1",
-    name: "Labubu Surprise Box + 2 Cute Bottles",
+    name: "1 Labubu Surprise Box + 2 Cute Bottles",
     description:
       "• 1x Labubu Blind Box (Random Design)\n• 2x Exclusive Collectible Bottles\n• Free Shipping Included",
     price: 40,
