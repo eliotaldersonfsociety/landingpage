@@ -16,13 +16,27 @@ interface Section {
 const sections: Section[] = [
   {
     type: "video",
-    titlePart1: "DISCOVER LABUBU",
-    titlePart2: "MONSTERS",
-    description:
-      "Dive into the adorable world of Labubu monsters from Pop Mart. These cute collectible figures bring joy and fun to any collection.",
+    titlePart1: "🎁 LABUBU SURPRISE BOX",
+    titlePart2: "+ 2 CUTE BOTTLES 🧸",
+    description: `
+  Each box is a surprise Labubu figure
+  + 2 exclusive collectible bottles
+
+  🚚 Ships fast from Hot Springs, TX 🇺🇸
+
+  📦 WHAT’S INSIDE THE BOX
+  • 1x Labubu Blind Box (Random Design)
+  • 2x Cute collectible bottles
+  • Official Pop Mart–style collectible
+  • Perfect for kids, collectors & gifts
+
+  You don’t choose the design — that’s the fun part.
+  Every box is a surprise experience 🎉
+    `,
     media: "/video.mp4",
     poster: "/video1.webp",
   },
+
   {
     type: "image",
     titlePart1: "THE PERFECT GIFT",
