@@ -32,8 +32,8 @@ export default function HomePage() {
           50% discount – Don't miss the opportunity!
         </span>
       </div>
-      <AlternatingContents />
       <ProductsWrapper products={defaultProducts.slice(0, 1)} />
+      <AlternatingContents />
       <ResultsCarouselClient />
       <AITestimonials />
       <div className="md:grid md:grid-cols-2 md:gap-8">
