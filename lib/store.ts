@@ -59,15 +59,17 @@ export interface SiteContent {
 export const defaultProducts: Product[] = [
   {
     id: "1",
-    name: "Labubu Monster Bundle",
-    description: "Get 1 adorable Labubu monster collectible + 2 stylish water bottles for only $40! Perfect for collectors and hydration lovers.",
+    name: "Labubu Surprise Box + 2 Cute Bottles",
+    description:
+      "• 1x Labubu Blind Box (Random Design)\n• 2x Exclusive Collectible Bottles\n• Free Shipping Included",
     price: 40,
     image: "/1.webp",
     category: "Collectibles",
   },
+
   {
     id: "2",
-    name: "Stylish Thermos Bottle",
+    name: "1 Stylish Thermos Bottle",
     description: "Keep your drinks hot or cold with this insulated thermos bottle. Perfect companion for the Labubu collectible.",
     price: 15,
     image: "/3.webp",
@@ -75,7 +77,7 @@ export const defaultProducts: Product[] = [
   },
   {
     id: "3",
-    name: "Labubu Monster Collectible",
+    name: "1 Labubu Surprise Box (Random Design)",
     description: "Beutiful Labubu monster collectible. Perfect for fans and collectors.",
     price: 20,
     image: "/2.webp",
