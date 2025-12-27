@@ -23,6 +23,14 @@ export const metadata: Metadata = {
   description:
     "The internet’s favorite viral products, delivered fast with secure checkout at TiendaTexas.",
   generator: "Bucaramarketing",
+  icons: {
+    icon: [
+      { url: "/icon.png", sizes: "32x32", type: "image/png" },
+      { url: "/icon-dark-32x32.png", media: "(prefers-color-scheme: dark)" },
+      { url: "/icon-light-32x32.png", media: "(prefers-color-scheme: light)" },
+    ],
+    apple: "/apple-icon.png",
+  },
 }
 
 export default function RootLayout({
