@@ -52,7 +52,7 @@ const sections: Section[] = [
     titlePart1: "SHIPS FAST FROM",
     titlePart2: "HOT SPRINGS, TX us 🚚",
     description:
-      "Fulfilled in the U.S. · Fast shipping from Hot Springs, TX · No long waits.",
+      "Fulfilled in the U.S. · Fast shipping from Hot Springs, TX · No long waits. Secure checkout · Pay with PayPal, Visa or Mastercard, 🔒 Your payment is 100% protected",
     media: "/5.webp",
   }
 ]
