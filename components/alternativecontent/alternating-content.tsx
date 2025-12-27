@@ -29,7 +29,7 @@ const sections: Section[] = [
     titlePart2: "THEY'LL REMEMBER 🎁",
     description:
       "Beautifully packed and ready to surprise.🎄 Perfect for birthdays & holidays🎁 Premium packaging 😊 Instant smiles guaranteed",
-    media: "/2.webp",
+    media: "/6.webp",
   },
   {
     type: "image",
@@ -37,7 +37,7 @@ const sections: Section[] = [
     titlePart2: "A BEST FRIEND 💛",
     description:
       "Soft, adorable, and designed to bring comfort anywhere. A hug they’ll never want to let go.",
-    media: "/3.webp",
+    media: "/7.webp",
   },
   {
     type: "image",
