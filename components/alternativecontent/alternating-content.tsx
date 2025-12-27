@@ -20,10 +20,10 @@ const sections: Section[] = [
     titlePart2: "+ 2 CUTE BOTTLES 🧸",
     description: `
 Each box includes:
-• 1x Labubu Blind Box (Random Design)
+• 1x Each box contains one random Labubu figure — the surprise is the fun part!
 • 2x Exclusive collectible bottles
 
-🚚 Ships fast from Hot Springs, TX 🇺🇸
+🚚 Ships from Hot Springs, TX · 1 business days
 
 📦 WHAT’S INSIDE THE BOX
 ✔ Official Pop Mart–style collectible

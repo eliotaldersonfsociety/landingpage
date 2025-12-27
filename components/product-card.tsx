@@ -76,16 +76,29 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
 
           {/* ADD TO CART BUTTON */}
           <Button
-            className={`
-              w-full transition
-              ${inView ? "bg-green-600 hover:bg-green-700" : "bg-amber-500"}
-            `}
-            data-action="add-to-cart"
-            onClick={() => onAddToCart(product)}
-          >
-            <ShoppingCart className="h-4 w-4 mr-2" />
-            Add to Cart
-          </Button>
+  className={`
+    w-full flex items-stretch p-0 overflow-hidden
+    transition
+    ${inView ? "bg-green-600 hover:bg-green-700" : "bg-amber-500"}
+  `}
+  data-action="add-to-cart"
+  onClick={() => onAddToCart(product)}
+>
+  {/* LEFT SIDE */}
+  <div className="flex items-center justify-center gap-2 px-5 py-3 text-white flex-1">
+    <ShoppingCart className="h-4 w-4" />
+    <span className="text-base font-semibold">Add to Cart</span>
+  </div>
+
+  {/* RIGHT PAYPAL SIDE */}
+  <div className="flex items-center justify-center px-4 bg-white">
+    <span className="font-bold tracking-tight">
+      <span className="text-[#094174]">Pay</span>
+      <span className="text-[#0474c8] -ml-[1px]">Pal</span>
+    </span>
+  </div>
+</Button>
+
 
           {/* PAYMENT LOGOS — SOLO CUANDO ESTÁ EN VERDE */}
           {inView && (
