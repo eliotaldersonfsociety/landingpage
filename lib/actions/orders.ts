@@ -176,3 +176,49 @@ export async function createOrderItemsAction(formData: FormData): Promise<OrderR
     return { success: false, error: 'Error creating order items' };
   }
 }
+
+export async function getAllOrdersAction(): Promise<OrderResponse> {
+  try {
+    const result = await db.select({
+      id: orders.id,
+      userId: orders.userId,
+      customerEmail: orders.customerEmail,
+      customerName: orders.customerName,
+      total: orders.total,
+      status: orders.status,
+      paymentProof: orders.paymentProof,
+      paymentMethod: orders.paymentMethod,
+      paypalOrderId: orders.paypalOrderId,
+      additionalInfo: orders.additionalInfo,
+      createdAt: orders.createdAt,
+    }).from(orders).orderBy(orders.createdAt);
+
+    return {
+      success: true,
+      data: { orders: result },
+    };
+  } catch (error) {
+    console.error('Get all orders error:', error);
+    return { success: false, error: 'Error fetching orders' };
+  }
+}
+
+export async function updateOrderStatusAction(formData: FormData): Promise<OrderResponse> {
+  try {
+    const orderId = parseInt(formData.get('orderId')?.toString() || '0');
+    const status = formData.get('status')?.toString() || '';
+
+    if (!orderId || !status) {
+      return { success: false, error: 'Order ID and status are required' };
+    }
+
+    await db.update(orders).set({ status }).where(eq(orders.id, orderId));
+
+    return {
+      success: true,
+    };
+  } catch (error) {
+    console.error('Update order status error:', error);
+    return { success: false, error: 'Error updating order status' };
+  }
+}
