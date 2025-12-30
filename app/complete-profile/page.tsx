@@ -4,13 +4,13 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useToast } from "@/hooks/use-toast";
 import { Dumbbell } from "lucide-react";
 import { NavigationMenu } from "@/components/ui/navigation-menu";
 
-export default function CompleteProfile() {
+function CompleteProfileContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const orderId = searchParams.get('orderId');
@@ -136,5 +136,13 @@ export default function CompleteProfile() {
       </div>
       <NavigationMenu />
     </div>
+  );
+}
+
+export default function CompleteProfile() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <CompleteProfileContent />
+    </Suspense>
   );
 }
