@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import jwt from "jsonwebtoken";
 
-const PROTECTED_ROUTES = ["/checkout", "/dashboard", "/admin"];
+const PROTECTED_ROUTES = ["/dashboard", "/admin"];
 
 // ✅ Debe llamarse EXACTAMENTE "proxy"
 export function proxy(request: NextRequest) {
@@ -38,7 +38,6 @@ export function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/checkout/:path*",
     "/dashboard/:path*",
     "/admin/:path*",
   ],

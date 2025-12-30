@@ -1,3 +1,4 @@
+// lib/schema.ts
 import { sqliteTable, text, integer, real } from 'drizzle-orm/sqlite-core';
 
 export const users = sqliteTable('users', {
@@ -16,7 +17,9 @@ export const users = sqliteTable('users', {
 
 export const orders = sqliteTable('orders', {
   id: integer('id').primaryKey({ autoIncrement: true }),
-  userId: integer('user_id').references(() => users.id).notNull(),
+  userId: integer('user_id').references(() => users.id), // ✅ nullable
+  customerEmail: text('customer_email').notNull(),       // ✅ obligatorio
+  customerName: text('customer_name'),                   // ✅ opcional (de PayPal o formulario)
   total: real('total').notNull(),
   status: text('status').notNull(),
   paymentProof: text('payment_proof'),
