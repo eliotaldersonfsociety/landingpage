@@ -3,7 +3,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Truck } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
@@ -57,15 +56,22 @@ export function ProductCard({ product }: ProductCardProps) {
     }
 
     const script = document.createElement("script");
+    // ✅ Corregido: sin espacios extra en la URL
     script.src = `https://www.paypal.com/sdk/js?client-id=${process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID}&currency=USD`;
     script.async = true;
     script.onload = () => setPaypalScriptLoaded(true);
     script.onerror = () => setError("Failed to load PayPal");
     document.body.appendChild(script);
+
+    return () => {
+      if (document.body.contains(script)) {
+        document.body.removeChild(script);
+      }
+    };
   };
 
   /* ===============================
-     RENDER PAYPAL BUTTON (when in view)
+     RENDER PAYPAL BUTTON
   =============================== */
   useEffect(() => {
     if (!inView || !paypalScriptLoaded || paypalRendered) return;
@@ -73,10 +79,14 @@ export function ProductCard({ product }: ProductCardProps) {
     const paypalContainer = document.getElementById(`paypal-button-container-${product.id}`);
     if (!paypalContainer) return;
 
-    // Limpiar contenedor previo
     paypalContainer.innerHTML = "";
 
-    interface PayPalDetails {
+    interface PurchaseUnit {
+      amount: { value: string };
+      description: string;
+    }
+
+    interface OrderDetails {
       id: string;
       payer?: {
       email_address?: string;
@@ -87,65 +97,53 @@ export function ProductCard({ product }: ProductCardProps) {
       };
     }
 
-    interface OrderPayload {
-      productId: string;
-      productName: string;
-      price: number;
-      paypalOrderId: string;
-      payerEmail?: string;
-      payerName: string;
-    }
-
-    interface PayPalActions {
-      order: {
-      create: (config: {
-        purchase_units: Array<{
-        amount: { value: string };
-        description: string;
-        }>;
-      }) => Promise<string>;
-      capture: () => Promise<PayPalDetails>;
-      };
+    interface CreateOrderResponse {
+      orderId: string;
     }
 
     window.paypal
       .Buttons({
-      createOrder: (_: any, actions: PayPalActions) => {
+      style: {
+        layout: 'vertical',
+        color: 'gold',
+        shape: 'pill',
+        label: 'pay',
+        height: 48,
+      },
+      createOrder: (_: unknown, actions: any) => {
         return actions.order.create({
         purchase_units: [
           {
           amount: { value: product.price.toFixed(2) },
           description: product.name,
-          },
+          } as PurchaseUnit,
         ],
         });
       },
-      onApprove: async (_: any, actions: PayPalActions) => {
+      onApprove: async (_: unknown, actions: any) => {
         try {
-        const details: PayPalDetails = await actions.order.capture();
+        const details: OrderDetails = await actions.order.capture();
 
-        const orderPayload: OrderPayload = {
+        const response = await fetch("/api/create-order", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
           productId: product.id,
           productName: product.name,
           price: product.price,
           paypalOrderId: details.id,
           payerEmail: details.payer?.email_address,
           payerName: `${details.payer?.name?.given_name || ""} ${details.payer?.name?.surname || ""}`.trim(),
-        };
-
-        const response = await fetch("/api/create-order", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(orderPayload),
+          }),
         });
 
         if (response.ok) {
-          const data = await response.json();
+          const data: CreateOrderResponse = await response.json();
           window.location.href = `/complete-profile?orderId=${data.orderId}`;
         } else {
           alert("Order created, but confirmation failed. Contact support.");
         }
-        } catch (err: unknown) {
+        } catch (err) {
         console.error(err);
         alert("Payment succeeded, but order failed. Contact support.");
         }
@@ -163,10 +161,9 @@ export function ProductCard({ product }: ProductCardProps) {
   return (
     <div ref={ref}>
       <Card
-        className={`
-          group overflow-hidden transition-all duration-300
-          ${inView ? "ring-[0.5px] ring-green-400 shadow-lg" : "hover:shadow-lg"}
-        `}
+        className={`group overflow-hidden transition-all duration-300 ${
+          inView ? "ring-[0.5px] ring-green-400 shadow-lg" : "hover:shadow-lg"
+        }`}
       >
         <CardContent className="p-0">
           <div className="relative h-64 overflow-hidden bg-muted">
@@ -194,21 +191,21 @@ export function ProductCard({ product }: ProductCardProps) {
             </div>
           </div>
 
-          {/* PAYPAL BUTTON CONTAINER */}
+          {/* ✅ CONTENEDOR DE PAYPAL CON FONDO PERSONALIZADO */}
           <div
             id={`paypal-button-container-${product.id}`}
-            className="w-full min-h-[50px] flex items-center justify-center"
+            className="w-full min-h-[60px] flex items-center justify-center rounded-xl bg-orange-50 border border-orange-200 p-2"
           >
             {error && <p className="text-red-500 text-sm">{error}</p>}
             {!paypalScriptLoaded && inView && (
-              <p className="text-muted-foreground text-sm">Loading payment...</p>
+              <p className="text-orange-700 text-sm font-medium">Loading secure payment...</p>
             )}
           </div>
 
           {/* PAYMENT LOGOS — SOLO CUANDO ESTÁ EN VERDE */}
           {inView && (
             <>
-              <div className="flex items-center gap-2 mt-1 text-xs text-muted-foreground">
+              <div className="flex items-center gap-2 mt-2 text-xs text-muted-foreground">
                 <span className="text-[11px]">Pay secure with</span>
                 <Image src="/paypal.svg" alt="PayPal" width={32} height={20} />
                 <Image src="/visa.svg" alt="Visa" width={32} height={20} />
@@ -216,7 +213,7 @@ export function ProductCard({ product }: ProductCardProps) {
               </div>
               <div className="flex items-center gap-1 mt-1 text-xs text-muted-foreground">
                 <Truck />
-                <span> Ships from <strong>Hot Springs, TX</strong> · 1 business day</span>
+                <span> Ships from <strong>Austin, TX</strong> · 1 business day</span>
               </div>
               <div className="flex items-center gap-1 mt-1 text-[10px] text-muted-foreground">
                 ✔ No hidden fees · ✔ Safe & encrypted payment

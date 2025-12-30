@@ -190,8 +190,7 @@ export async function getAllOrdersAction(): Promise<OrderResponse> {
       paymentMethod: orders.paymentMethod,
       paypalOrderId: orders.paypalOrderId,
       additionalInfo: orders.additionalInfo,
-      createdAt: orders.createdAt,
-    }).from(orders).orderBy(orders.createdAt);
+    }).from(orders);
 
     return {
       success: true,
@@ -241,8 +240,7 @@ export async function getUserOrdersAction(): Promise<OrderResponse> {
       paymentMethod: orders.paymentMethod,
       paypalOrderId: orders.paypalOrderId,
       additionalInfo: orders.additionalInfo,
-      createdAt: orders.createdAt,
-    }).from(orders).where(eq(orders.userId, userId)).orderBy(orders.createdAt);
+    }).from(orders).where(eq(orders.userId, userId));
 
     return {
       success: true,
