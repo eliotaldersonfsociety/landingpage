@@ -179,7 +179,7 @@ export async function createOrderItemsAction(formData: FormData): Promise<OrderR
 
 export async function getAllOrdersAction(): Promise<OrderResponse> {
   try {
-    const result = await db.select({
+    const ordersResult = await db.select({
       id: orders.id,
       userId: orders.userId,
       customerEmail: orders.customerEmail,
@@ -192,9 +192,22 @@ export async function getAllOrdersAction(): Promise<OrderResponse> {
       additionalInfo: orders.additionalInfo,
     }).from(orders);
 
+    // Get items for each order
+    const ordersWithItems = await Promise.all(
+      ordersResult.map(async (order) => {
+        const items = await db.select({
+          id: orderItems.id,
+          name: orderItems.name,
+          price: orderItems.price,
+        }).from(orderItems).where(eq(orderItems.orderId, order.id));
+
+        return { ...order, items };
+      })
+    );
+
     return {
       success: true,
-      data: { orders: result },
+      data: { orders: ordersWithItems },
     };
   } catch (error) {
     console.error('Get all orders error:', error);
@@ -229,7 +242,7 @@ export async function getUserOrdersAction(): Promise<OrderResponse> {
       return { success: false, error: 'User not authenticated' };
     }
 
-    const result = await db.select({
+    const ordersResult = await db.select({
       id: orders.id,
       userId: orders.userId,
       customerEmail: orders.customerEmail,
@@ -242,9 +255,22 @@ export async function getUserOrdersAction(): Promise<OrderResponse> {
       additionalInfo: orders.additionalInfo,
     }).from(orders).where(eq(orders.userId, userId));
 
+    // Get items for each order
+    const ordersWithItems = await Promise.all(
+      ordersResult.map(async (order) => {
+        const items = await db.select({
+          id: orderItems.id,
+          name: orderItems.name,
+          price: orderItems.price,
+        }).from(orderItems).where(eq(orderItems.orderId, order.id));
+
+        return { ...order, items };
+      })
+    );
+
     return {
       success: true,
-      data: { orders: result },
+      data: { orders: ordersWithItems },
     };
   } catch (error) {
     console.error('Get user orders error:', error);
