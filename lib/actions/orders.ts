@@ -222,3 +222,34 @@ export async function updateOrderStatusAction(formData: FormData): Promise<Order
     return { success: false, error: 'Error updating order status' };
   }
 }
+
+export async function getUserOrdersAction(): Promise<OrderResponse> {
+  try {
+    const userId = await getUserIdFromTokenOptional();
+    if (!userId) {
+      return { success: false, error: 'User not authenticated' };
+    }
+
+    const result = await db.select({
+      id: orders.id,
+      userId: orders.userId,
+      customerEmail: orders.customerEmail,
+      customerName: orders.customerName,
+      total: orders.total,
+      status: orders.status,
+      paymentProof: orders.paymentProof,
+      paymentMethod: orders.paymentMethod,
+      paypalOrderId: orders.paypalOrderId,
+      additionalInfo: orders.additionalInfo,
+      createdAt: orders.createdAt,
+    }).from(orders).where(eq(orders.userId, userId)).orderBy(orders.createdAt);
+
+    return {
+      success: true,
+      data: { orders: result },
+    };
+  } catch (error) {
+    console.error('Get user orders error:', error);
+    return { success: false, error: 'Error fetching user orders' };
+  }
+}
